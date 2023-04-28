@@ -1,4 +1,5 @@
 from flask import Flask, render_template, send_file, request, session, redirect, url_for
+from database import get_connection
 import mysql.connector
 
 app = Flask(__name__)
@@ -26,21 +27,20 @@ def homeRgpd():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     msg = ''
-    connection = mysql.connector.connect(host='localhost', port='3306', database='sicko_db', user='root',
-                                         password='p.142230561')
-
+    connection = get_connection()
     cursor = connection.cursor()
 
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
-        cursor.execute('SELECT * FROM USERS WHERE username=%s AND password=%s', (username, password))
+        cursor.execute('SELECT * FROM users WHERE username=%s AND password=%s', (username, password))
         record = cursor.fetchone()
+        columns = [column[0] for column in cursor.description]
         if record:
             session['logedin'] = True
-            session['username'] = record[1]
-            session['rgpd'] = record[3]
-            if record[3] == '1':
+            session['username'] = record[columns.index('username')]
+            session['rgpd'] = record[columns.index('rgpd')]
+            if session['rgpd'] == '1':
                 return redirect(url_for('home'))
             else:
                 return redirect(url_for('homeRgpd'))
@@ -62,29 +62,27 @@ def logout():
 
 @app.route('/acceptRGPD')
 def acceptRGPD():
-    # Connect to the MySQL database
-    mydb = mysql.connector.connect(host='localhost',
-                                   port='3306',
-                                   database='sicko_db',
-                                   user='root',
-                                   password='p.142230561')
-
     # Get a cursor object to execute SQL queries
-    cursor = mydb.cursor()
+    connection = get_connection()
+    cursor = connection.cursor()
 
     username = session.get('username')
 
     if username is None:
         return "Error: no username in session"
     # Update the users table to set rgpd to 1
-    sql = "UPDATE users SET rgpd = 1 WHERE username = %s"
+    sql = "UPDATE users SET rgpd = '1' WHERE username = %s"
     val = (username,)
-    cursor.execute(sql, val)
+    try:
+        cursor.execute(sql, val)
 
-    # Commit the changes to the database and close the cursor and connection
-    mydb.commit()
+        # Commit the changes to the database and close the cursor and connection
+        connection.commit()
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+
     cursor.close()
-    mydb.close()
+    connection.close()
 
     return redirect(url_for('login'))
 

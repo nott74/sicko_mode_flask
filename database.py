@@ -1,10 +1,19 @@
 from flask_sqlalchemy import SQLAlchemy
+import mysql.connector
+import os
+from dotenv import load_dotenv
 
-db = SQLAlchemy()
+load_dotenv()
+print(os.getenv("HOST"))
+print(os.getenv("DATABASE"))
+print(os.getenv("USER"))
+print(os.getenv("PASSWORD"))
 
 
-def init_app(app):
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://username:password@localhost/db_name'
-    db.init_app(app)
-    with app.app_context():
-        db.create_all()
+def get_connection():
+    return mysql.connector.connect(
+        host=os.getenv("HOST"),
+        database=os.getenv("DATABASE"),
+        user=os.getenv("USER"),
+        password=os.getenv("PASSWORD")
+    )
