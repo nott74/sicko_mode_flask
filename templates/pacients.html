@@ -29,25 +29,8 @@
 	</style>
 </head>
 <body>
-	<header>
-		<div class="logo">
-			<img src="../static/img/logo.png" alt="Sicko Clinic Logo">
-			<h1>Sicko Clinic</h1>
-		</div>
-		<nav>
-			<ul>
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Patients</a></li>
-				<li><a href="#">Appointments</a></li>
-				<li><a href="#">Billing</a></li>
-				<li><a href="#">My Profile</a></li>
-				<li><a href="{{ url_for('logout') }}">Logout</a></li>
-			</ul>
-		</nav>
-	</header>
 	<main>
-		<h1>Welcome to Sicko Clinic, {{ username }}!</h1>
-		<p>Here at Sicko Clinic, we're dedicated to providing the best healthcare services for our patients. Whether you're in need of a routine checkup or a specialized procedure, we've got you covered. Take a look around and see what we have to offer!</p>
+		<h1>Pacients List</h1>
 		<table>
 			<thead>
 				<tr>
@@ -55,34 +38,19 @@
 					<th>Birth Date</th>
 					<th>Care Taker</th>
 					<th>Doctor</th>
-					<th>Disease</th>
 				</tr>
 			</thead>
 			<tbody>
+				{% for pacient in pacients %}
 				<tr>
-					<td>John Doe</td>
-					<td>1985-06-23</td>
-					<td>Dr. Smith</td>
-					<td>Dr. Johnson</td>
-					<td>Flu</td>
+					<td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
+					<td>{{ pacient.birth_date }}</td>
+					<td>{{ pacient.care_taker }}</td>
+					<td>{{ pacient.doctor_name }}</td>
 				</tr>
-				<tr>
-					<td>Jane Smith</td>
-					<td>1990-03-15</td>
-					<td>Dr. Wilson</td>
-					<td>Dr. Brown</td>
-					<td>Cancer</td>
-				</tr>
-				<tr>
-					<td>Bob Johnson</td>
-					<td>1973-11-07</td>
-					<td>Dr. Anderson</td>
-					<td>Dr. Lee</td>
-					<td>Heart Disease</td>
-				</tr>
+				{% endfor %}
 			</tbody>
 		</table>
-		<img src="../static/img/logo.png" alt="Sicko Clinic">
 	</main>
 </body>
 </html>

@@ -13,8 +13,8 @@
 		</div>
 		<nav>
 			<ul>
-				<li><a href="#">Home</a></li>
-				<li><a href="#">Patients</a></li>
+				<li><a href="{{ url_for('home') }}">Home</a></li>
+				<li><a href="{{ url_for('pacients') }}">Patients</a></li>
 				<li><a href="#">Appointments</a></li>
 				<li><a href="#">Billing</a></li>
 				<li><a href="#">My Profile</a></li>
@@ -23,9 +23,11 @@
 		</nav>
 	</header>
 	<main>
-		<h1>Welcome to Sicko Clinic, {{ username }}!</h1>
-		<p>Here at Sicko Clinic, we're dedicated to providing the best healthcare services for our patients. Whether you're in need of a routine checkup or a specialized procedure, we've got you covered. Take a look around and see what we have to offer!</p>
-		<img src="../static/img/logo.png" alt="Sicko Clinic">
+		<div id="content">
+            {% block content %}
+                {{ content|safe }}
+            {% endblock %}
+        </div>
 	</main>
 </body>
 </html>
