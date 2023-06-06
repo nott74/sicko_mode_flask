@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sicko Clinic</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+</head>
+<body>
+<header>
+    <div class="logo">
+        <img src="../static/img/logo_2.png" alt="Sicko Clinic Logo">
+        <h1>Sicko Clinic</h1>
+    </div>
+    <nav>
+        <ul>
+            <li><a href="{{ url_for('clinic.home') }}">Home</a></li>
+            <li><a href="{{ url_for('clinic.pacients') }}">Patients</a></li>
+            <li><a href="#">Appointments</a></li>
+            <li><a href="#">Billing</a></li>
+            <li><a href="{{ url_for('clinic.profile') }}">My Profile</a></li>
+            <li><a href="{{ url_for('auth.logout') }}">Logout</a></li>
+        </ul>
+    </nav>
+</header>
+<main>
+    <div id="content">
+        {% block content %}
+            {{ content|safe }}
+        {% endblock %}
+    </div>
+</main>
+</body>
+</html>

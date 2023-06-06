@@ -1,0 +1,58 @@
+Privacy Policy
+
+Effective Date: 22/05/2023
+
+This Privacy Policy outlines how we collect, use, disclose, and protect the personal information of users of our psychiatric clinic management application. We are committed to maintaining the privacy and security of your personal information and complying with applicable data protection laws.
+
+    Information We Collect
+    We may collect the following types of personal information from users of our application:
+
+    User Information: When you create an account, we collect information such as your username, password, first name, last name, email address, and contact information. This information is necessary for account creation and communication purposes.
+
+    Patient Information: As a caretaker or doctor, you may provide patient information such as name, date of birth, medical history, and treatment details. This information is essential for managing patient records and providing appropriate care.
+
+    Usage Information: We collect information about how you interact with our application, including log files, device information, IP addresses, and browser type. This information is used for analytics purposes and to enhance the performance and functionality of our application.
+
+    Use of Information
+    We use the collected information for the following purposes:
+
+    Providing Services: We use your personal information to create and manage user accounts, facilitate communication between caretakers and doctors, and enable the management of patient records.
+
+    Improving User Experience: We may use usage information to analyze user behavior, preferences, and trends. This helps us enhance the functionality and usability of our application to provide a better user experience.
+
+    Security and Compliance: We employ appropriate security measures to protect your personal information and ensure compliance with applicable laws and regulations.
+
+    Disclosure of Information
+    We may disclose your personal information in the following circumstances:
+
+    Caretakers and Doctors: We may share patient information with authorized caretakers and doctors who are involved in the treatment and care of the patients.
+
+    Service Providers: We may engage third-party service providers who assist in the operation and maintenance of our application. These service providers are bound by confidentiality agreements and are only authorized to use the information as necessary to provide the services.
+
+    Legal Requirements: We may disclose personal information if required to do so by law or if we believe that such action is necessary to comply with legal obligations, protect our rights, or investigate potential violations.
+
+    Data Retention
+    We retain personal information for as long as necessary to fulfill the purposes outlined in this Privacy Policy, unless a longer retention period is required or permitted by law. When the information is no longer required, we will securely delete or anonymize it.
+
+    Your Rights and Choices
+    You have the right to access, update, and delete your personal information. You can also withdraw your consent for the collection and processing of your personal information, subject to legal and contractual restrictions. Please contact us using the information provided below to exercise your rights.
+
+    Security
+    We implement reasonable security measures to protect your personal information from unauthorized access, alteration, disclosure, or destruction. However, please be aware that no method of transmission or storage is completely secure, and we cannot guarantee the absolute security of your information.
+
+    Changes to the Privacy Policy
+    We may update this Privacy Policy from time to time to reflect changes in our practices or legal obligations. We will notify you of any significant changes by posting a prominent notice on our application or by other means.
+
+    Contact Us
+    If you have any questions, concerns, or requests regarding this Privacy Policy or the handling of your personal information, please contact us at:
+
+    Clinic Name: Sicko Clinic
+    Clinic Address: R. Dr. António Bernardino de Almeida 431, 4249-015 Porto, Portugal
+    Email Address: 1191031@isep.ipp.pt
+    Phone Number: 987654321
+
+We will endeavor to respond to your inquiries and address your concerns in a timely manner.
+
+By using our psychiatric clinic management application, you consent to the collection, use, and disclosure of your personal information as described in this Privacy Policy.
+
+Please read this Privacy Policy carefully and ensure that you understand its contents.

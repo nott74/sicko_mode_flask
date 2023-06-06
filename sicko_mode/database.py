@@ -1,9 +1,5 @@
-from flask_sqlalchemy import SQLAlchemy
-import mysql.connector
 import os
-from dotenv import load_dotenv
-
-load_dotenv()
+import mysql.connector
 
 
 def get_connection():

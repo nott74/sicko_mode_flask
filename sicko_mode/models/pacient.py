@@ -1,4 +1,3 @@
-
 class Pacient:
     def __init__(self, id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name):
         self.id = id

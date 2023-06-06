@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sicko Clinic</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .popup-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #fff;
+            width: 80%;
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .close {
+            align-self: flex-end;
+            font-size: 18px;
+            font-weight: bold;
+            color: #333;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>User Profile</h1>
+    <div class="profile">
+        <h2>Personal Information</h2>
+        <form action="/update-profile" method="POST">
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" value="{{ user.username }}" readonly><br><br>
+            <label for="first_name">First Name:</label>
+            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
+            <label for="last_name">Last Name:</label>
+            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br><br>
+            <label for="birth_date">Birth Date:</label>
+            <input type="text" id="birth_date" name="birth_date" value="{{ user.birth_date }}"><br><br>
+            <label for="tlm">Phone Number:</label>
+            <input type="text" id="tlm" name="tlm" value="{{ user.tlm }}"><br><br>
+            <label for="nif">NIF:</label>
+            <input type="text" id="nif" name="nif" value="{{ user.nif }}"><br><br>
+            <input type="submit" value="Update">
+        </form>
+    </div>
+
+    <div class="privacy-policy">
+        <h2>Privacy Policy</h2>
+        <button onclick="openPopup()">View Privacy Policy</button>
+        <!-- Profile popup -->
+        <div class="popup" id="profilePopup">
+            <div class="popup-content">
+                <span class="close" onclick="closePopup()">&times;</span>
+                <h2>Privacy Policy</h2>
+                <pre id="privacyPolicyText"></pre>
+            </div>
+        </div>
+    </div>
+    <script>
+        // Function to open the popup
+        function openPopup() {
+            document.getElementById("profilePopup").style.display = "block";
+        }
+
+        // Function to close the popup
+        function closePopup() {
+            document.getElementById("profilePopup").style.display = "none";
+        }
+
+        // Load the privacy policy text from the PRIVACY_POLICY file
+        fetch("../static/PRIVACY_POLICY.txt")
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById("privacyPolicyText").textContent = data;
+            });
+    </script>
+</main>
+</body>
+</html>
