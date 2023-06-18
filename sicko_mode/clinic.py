@@ -1,8 +1,11 @@
 import mysql.connector
-from flask import render_template, session, redirect, url_for, Blueprint
+from flask import render_template, session, redirect, url_for, Blueprint, request
 
 from sicko_mode.database import get_connection
+from sicko_mode.models.doctor import Doctor
+from sicko_mode.models.medication import Medication
 from sicko_mode.models.pacient import Pacient
+from sicko_mode.models.prescription import Prescription
 from sicko_mode.models.user import User
 
 bp = Blueprint("clinic", __name__, url_prefix="/clinic")
@@ -101,3 +104,106 @@ def profile():
 
     rendered_profile = render_template('profile.html', user=user)
     return render_template('home.html', content=rendered_profile)
+
+
+@bp.route('/prescriptions')
+def prescriptions():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    query = ("SELECT "
+             " CONCAT('P' , prescriptions.id) as prescription_id, "
+             " CONCAT(pacients.first_name, ' ' , pacients.last_name) as patient_name, "
+             " CONCAT(users.first_name, ' ' , users.last_name) as doctor_name, "
+             " medication.name as medication, "
+             " prescriptions.dosage as dosage, "
+             " prescriptions.instructions as instructions, "
+             " prescriptions.prescription_date as prescription_date "
+             " FROM "
+             " prescriptions "
+             " INNER JOIN pacients on "
+             " pacients.id = prescriptions.patient_id "
+             " INNER JOIN users on "
+             " users.user_id = prescriptions.prescribing_doctor_id "
+             " INNER JOIN medication on "
+             " medication.id = prescriptions.medication; ")
+
+    cursor.execute(query)
+
+    prescriptions_list = []
+
+    for prescription_id, patient_name, doctor_name, medication, dosage, instructions, prescription_date in cursor.fetchall():
+        prescriptions_list.append(
+            Prescription(prescription_id, patient_name, doctor_name, medication, dosage, instructions,
+                         prescription_date))
+
+    # Query the patient names for the select field
+    patients_query = """
+                SELECT id, pacients.first_name, pacients.last_name, pacients.care_taker, doctor_id, pacients.birth_date, CONCAT(users.first_name, ' ', users.last_name) as doctor_name
+                FROM pacients
+                INNER JOIN users ON users.user_id = pacients.doctor_id
+            """
+
+    cursor.execute(patients_query)
+    patients = []
+
+    for row in cursor.fetchall():
+        patient_id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name = row
+        patient = Pacient(patient_id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name)
+        patients.append(patient)
+
+    # Query the doctor names for the select field
+    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type='Doctor'"
+
+    cursor.execute(doctors_query)
+    doctors = []
+
+    for row in cursor.fetchall():
+        doctor_id, first_name, last_name = row
+        doctor = Doctor(doctor_id, first_name, last_name, "")
+        doctors.append(doctor)
+
+    # Query the medication names for the select field
+    medications_query = "SELECT id, name as medication, description FROM medication"
+    cursor.execute(medications_query)
+    medications = []
+
+    for row in cursor.fetchall():
+        medication_id, medication_name, medication_description = row
+        medication = Medication(medication_id, medication_name, medication_description)
+        medications.append(medication)
+
+    cursor.close()
+    connection.close()
+
+    rendered_prescriptions = render_template('prescriptions.html', prescriptions=prescriptions_list, patients=patients, doctors=doctors, medications=medications)
+    return render_template('home.html', content=rendered_prescriptions)
+
+
+@bp.route('/add_prescription', methods=['POST'])
+def add_prescription():
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    patient_id = request.form['patient_name']
+    doctor_id = request.form['doctor_name']
+    medication_id = request.form['medication']
+    dosage = request.form['dosage']
+    instructions = request.form['instructions']
+    prescription_date = request.form['prescription_date']
+
+    sql = "INSERT INTO prescriptions (patient_id, prescribing_doctor_id, medication, dosage, instructions, prescription_date) " \
+          "VALUES (%s, %s, %s, %s, %s, %s)"
+    val = (patient_id, doctor_id, medication_id, dosage, instructions, prescription_date)
+
+    try:
+        cursor.execute(sql, val)
+        connection.commit()
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        return "Error: Failed to add prescription"
+
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('clinic.prescriptions'))

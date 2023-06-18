@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Sicko Clinic</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px auto;
+            width: 80%;
+            max-width: 1000px;
+            font-size: 18px;
+            text-align: left;
+        }
+
+        th, td {
+            padding: 12px;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #0077b5;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        form {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 300px;
+            padding: 6px;
+            font-size: 16px;
+        }
+
+        .form-group textarea {
+            width: 300px;
+            height: 80px;
+            padding: 6px;
+            font-size: 16px;
+        }
+
+        .form-group button {
+            padding: 6px 12px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <h1>Prescription List</h1>
+    <table>
+        <thead>
+        <tr>
+            <th>Id</th>
+            <th>Patient</th>
+            <th>Doctor</th>
+            <th>Medication</th>
+            <th>Dosage</th>
+            <th>Instructions</th>
+            <th>Date</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for prescription in prescriptions %}
+            <tr>
+                <td>{{ prescription.prescription_id }}</td>
+                <td>{{ prescription.patient_name }}</td>
+                <td>{{ prescription.doctor_name }}</td>
+                <td>{{ prescription.medication }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.instructions }}</td>
+                <td>{{ prescription.prescription_date }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <h2>Add New Prescription</h2>
+    <form method="POST" action="{{ url_for('clinic.add_prescription') }}">
+    <div class="form-group">
+        <label for="patient_name">Patient:</label>
+        <select id="patient_name" name="patient_name" required>
+            {% for patient in patients %}
+                <option value="{{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="doctor_name">Doctor:</label>
+        <select id="doctor_name" name="doctor_name" required>
+            {% for doctor in doctors %}
+                <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="medication">Medication:</label>
+        <select id="medication" name="medication" required>
+            {% for medication in medications %}
+                <option value="{{ medication.id }}">{{ medication.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="dosage">Dosage:</label>
+        <input type="text" id="dosage" name="dosage" required>
+    </div>
+    <div class="form-group">
+        <label for="instructions">Instructions:</label>
+        <textarea id="instructions" name="instructions" required></textarea>
+    </div>
+    <div class="form-group">
+        <label for="prescription_date">Date:</label>
+        <input type="date" id="prescription_date" name="prescription_date" required>
+    </div>
+    <div class="form-group">
+        <button type="submit">Add Prescription</button>
+    </div>
+</form>
+</main>
+</body>
+</html>
