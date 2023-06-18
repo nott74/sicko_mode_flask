@@ -154,7 +154,7 @@ def prescriptions():
         patients.append(patient)
 
     # Query the doctor names for the select field
-    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type='Doctor' and rmv = 0"
+    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type='Doctor' and rmv = '0'"
 
     cursor.execute(doctors_query)
     doctors = []

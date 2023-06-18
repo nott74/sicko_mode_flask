@@ -62,10 +62,7 @@ nav a:hover {
 
 /* Main content styles */
 main {
-    max-width: 1200px;
-    margin: 0 auto;
     padding: 40px;
-    text-align: center;
 }
 
 h1 {
