@@ -42,9 +42,9 @@ def pacients():
              + "  pacients.care_taker as care_taker, "
              + "  pacients.doctor_id as doctor_id, "
              + "  pacients.birth_date as birth_date, "
-             + "  CONCAT(doctors.first_name, ' ' , doctors.last_name) as doctor_name "
+             + "  CONCAT(users.first_name, ' ' , users.last_name) as doctor_name "
              + "FROM pacients "
-             + "INNER JOIN doctors on doctors.id = pacients.doctor_id")
+             + "INNER JOIN users on users.user_id = pacients.doctor_id")
 
     cursor.execute(query)
 
@@ -112,7 +112,7 @@ def prescriptions():
     cursor = connection.cursor()
 
     query = ("SELECT "
-             " CONCAT('P' , prescriptions.id) as prescription_id, "
+             " prescriptions.id as prescription_id, "
              " CONCAT(pacients.first_name, ' ' , pacients.last_name) as patient_name, "
              " CONCAT(users.first_name, ' ' , users.last_name) as doctor_name, "
              " medication.name as medication, "
@@ -126,7 +126,8 @@ def prescriptions():
              " INNER JOIN users on "
              " users.user_id = prescriptions.prescribing_doctor_id "
              " INNER JOIN medication on "
-             " medication.id = prescriptions.medication; ")
+             " medication.id = prescriptions.medication "
+             " WHERE prescriptions.rmv = 0; ")
 
     cursor.execute(query)
 
@@ -153,7 +154,7 @@ def prescriptions():
         patients.append(patient)
 
     # Query the doctor names for the select field
-    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type='Doctor'"
+    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type='Doctor' and rmv = 0"
 
     cursor.execute(doctors_query)
     doctors = []
@@ -207,3 +208,69 @@ def add_prescription():
     connection.close()
 
     return redirect(url_for('clinic.prescriptions'))
+
+
+@bp.route('/prescriptions/delete/<int:prescription_id>', methods=['POST'])
+def delete_prescription(prescription_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    # Update the 'rmv' column to 1 for the given prescription_id
+    query = "UPDATE prescriptions SET rmv = 1 WHERE id = %s"
+    cursor.execute(query, (prescription_id,))
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    # Redirect to the prescriptions page or any other desired page
+    return redirect(url_for('clinic.prescriptions'))
+
+
+@bp.route('/prescriptions/details/<int:prescription_id>')
+def prescription_details(prescription_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    # Retrieve the prescription details for the given prescription_id
+    query = ("SELECT "
+             " CONCAT('P', prescriptions.id) as prescription_id, "
+             " CONCAT(pacients.first_name, ' ', pacients.last_name) as patient_name, "
+             " CONCAT(users.first_name, ' ', users.last_name) as doctor_name, "
+             " medication.name as medication, "
+             " prescriptions.dosage as dosage, "
+             " prescriptions.instructions as instructions, "
+             " prescriptions.prescription_date as prescription_date "
+             " FROM "
+             " prescriptions "
+             " INNER JOIN pacients on "
+             " pacients.id = prescriptions.patient_id "
+             " INNER JOIN users on "
+             " users.user_id = prescriptions.prescribing_doctor_id "
+             " INNER JOIN medication on "
+             " medication.id = prescriptions.medication "
+             " WHERE prescriptions.id = %s")
+    cursor.execute(query, (prescription_id,))
+    prescription_data = cursor.fetchone()
+
+    cursor.close()
+    connection.close()
+
+    if prescription_data:
+        # Create a Prescription object using the retrieved data
+        prescription = Prescription(
+            prescription_data[0],
+            prescription_data[1],
+            prescription_data[2],
+            prescription_data[3],
+            prescription_data[4],
+            prescription_data[5],
+            prescription_data[6]
+        )
+
+        rendered_prescriptions = render_template('prescription_details.html', prescription=prescription)
+        return render_template('home.html', content=rendered_prescriptions)
+    else:
+        # Prescription not found, handle accordingly (e.g., redirect or display an error message)
+        return "Prescription not found"
+

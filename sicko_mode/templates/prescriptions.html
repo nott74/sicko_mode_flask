@@ -78,18 +78,30 @@
             <th>Dosage</th>
             <th>Instructions</th>
             <th>Date</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for prescription in prescriptions %}
             <tr>
-                <td>{{ prescription.prescription_id }}</td>
+                <td>P{{ prescription.prescription_id }}</td>
                 <td>{{ prescription.patient_name }}</td>
                 <td>{{ prescription.doctor_name }}</td>
                 <td>{{ prescription.medication }}</td>
                 <td>{{ prescription.dosage }}</td>
                 <td>{{ prescription.instructions }}</td>
                 <td>{{ prescription.prescription_date }}</td>
+                <td>
+                    <!-- Delete Button -->
+                    <form method="POST" action="{{ url_for('clinic.delete_prescription', prescription_id=prescription.prescription_id) }}">
+                        <button type="submit">Delete</button>
+                    </form>
+
+                    <!-- Details Button -->
+                    <form method="GET" action="{{ url_for('clinic.prescription_details', prescription_id=prescription.prescription_id) }}">
+                        <button type="submit">Details</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
         </tbody>

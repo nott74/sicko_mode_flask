@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Prescription Details</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        .prescription-details {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        .prescription-details h2 {
+            margin-bottom: 10px;
+        }
+
+        .prescription-details table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .prescription-details th,
+        .prescription-details td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .prescription-details th {
+            background-color: #0077b5;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .prescription-details td {
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <div class="prescription-details">
+        <h2>Prescription Details</h2>
+        <table>
+            <tr>
+                <th>Prescription ID</th>
+                <td>{{ prescription.prescription_id }}</td>
+            </tr>
+            <tr>
+                <th>Patient Name</th>
+                <td>{{ prescription.patient_name }}</td>
+            </tr>
+            <tr>
+                <th>Doctor Name</th>
+                <td>{{ prescription.doctor_name }}</td>
+            </tr>
+            <tr>
+                <th>Medication</th>
+                <td>{{ prescription.medication }}</td>
+            </tr>
+            <tr>
+                <th>Dosage</th>
+                <td>{{ prescription.dosage }}</td>
+            </tr>
+            <tr>
+                <th>Instructions</th>
+                <td>{{ prescription.instructions }}</td>
+            </tr>
+            <tr>
+                <th>Date</th>
+                <td>{{ prescription.prescription_date }}</td>
+            </tr>
+        </table>
+    </div>
+</main>
+</body>
+</html>
