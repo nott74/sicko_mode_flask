@@ -161,6 +161,7 @@ def prescriptions():
                 SELECT id, patients.first_name, patients.last_name, patients.care_taker, doctor_id, patients.birth_date, CONCAT(users.first_name, ' ', users.last_name) as doctor_name
                 FROM patients
                 INNER JOIN users ON users.user_id = patients.doctor_id
+                WHERE patients.rmv = 0
             """
 
     cursor.execute(patients_query)

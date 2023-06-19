@@ -157,7 +157,6 @@
             <th>ID</th>
             <th>Name</th>
             <th>Birth Date</th>
-            <th>Care Taker</th>
             <th>Doctor</th>
             <th>Address</th>
             <th>Phone Number</th>
@@ -174,7 +173,6 @@
                 <td>P{{ pacient.id }}</td>
                 <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
                 <td>{{ pacient.birth_date }}</td>
-                <td>{{ pacient.care_taker }}</td>
                 <td>{{ pacient.doctor_name }}</td>
                 <td>{{ pacient.address }}</td>
                 <td>{{ pacient.phone_number }}</td>
@@ -209,7 +207,7 @@
                 </div>
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
-                    <input type="text" id="phone_number" name="phone_number" required class="input-field">
+                    <input type="number" id="phone_number" name="phone_number" required class="input-field">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -229,7 +227,7 @@
                 </div>
                 <div class="form-group">
                     <label for="emergency_contact">Emergency Contact:</label>
-                    <input type="text" id="emergency_contact" name="emergency_contact" required class="input-field">
+                    <input type="number" id="emergency_contact" name="emergency_contact" required class="input-field">
                 </div>
                 <div class="form-group">
                     <label for="doctor_name">Doctor:</label>
