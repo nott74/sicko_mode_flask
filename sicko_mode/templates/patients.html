@@ -157,7 +157,6 @@
             <th>ID</th>
             <th>Name</th>
             <th>Birth Date</th>
-            <th>Care Taker</th>
             <th>Doctor</th>
             <th>Address</th>
             <th>Phone Number</th>
@@ -174,7 +173,6 @@
                 <td>P{{ pacient.id }}</td>
                 <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
                 <td>{{ pacient.birth_date }}</td>
-                <td>{{ pacient.care_taker }}</td>
                 <td>{{ pacient.doctor_name }}</td>
                 <td>{{ pacient.address }}</td>
                 <td>{{ pacient.phone_number }}</td>
@@ -198,7 +196,7 @@
         <div id="popup" class="popup">
             <span id="closePopup" class="popup-close">&times;</span>
             <h2>Add Patient</h2>
-            <form method="POST" action="{{ url_for('clinic.add_patient') }}" class="popup-form">
+            <form method="POST" action="{{ url_for('clinic.add_patient') }}" class="popup-form" onsubmit="return validateForm()">
                 <div class="form-group">
                     <label for="first_name">First Name:</label>
                     <input type="text" id="first_name" name="first_name" required class="input-field">
@@ -209,7 +207,7 @@
                 </div>
                 <div class="form-group">
                     <label for="phone_number">Phone Number:</label>
-                    <input type="text" id="phone_number" name="phone_number" required class="input-field">
+                    <input type="number" id="phone_number" name="phone_number" required class="input-field">
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
@@ -229,7 +227,7 @@
                 </div>
                 <div class="form-group">
                     <label for="emergency_contact">Emergency Contact:</label>
-                    <input type="text" id="emergency_contact" name="emergency_contact" required class="input-field">
+                    <input type="number" id="emergency_contact" name="emergency_contact" required class="input-field">
                 </div>
                 <div class="form-group">
                     <label for="doctor_name">Doctor:</label>
@@ -264,6 +262,35 @@
             document.getElementById("popupOverlay").style.display = "none";
             document.getElementById("popup").style.display = "none";
         });
+
+        function validateForm() {
+    var phoneNumberInput = document.getElementById("phone_number");
+    var emailInput = document.getElementById("email");
+    var birthDateInput = document.getElementById("birth_date");
+
+    // Validate phone number
+    if (phoneNumberInput.value.length !== 9) {
+      alert("Phone number must have exactly 9 digits");
+      return false;
+    }
+
+    // Validate email format
+    var emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+    if (!emailPattern.test(emailInput.value)) {
+      alert("Invalid email format");
+      return false;
+    }
+
+    // Validate birth date
+    var currentDate = new Date();
+    var selectedDate = new Date(birthDateInput.value);
+    if (selectedDate >= currentDate) {
+      alert("Birth date must be prior to the current date");
+      return false;
+    }
+
+    return true;
+  }
     </script>
 </main>
 </body>
