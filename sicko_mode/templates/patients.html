@@ -197,26 +197,26 @@
     <div id="popupOverlay" class="overlay">
         <div id="popup" class="popup">
             <span id="closePopup" class="popup-close">&times;</span>
-            <h1>Add Patient</h1>
+            <h2>Add Patient</h2>
             <form method="POST" action="{{ url_for('clinic.add_patient') }}" class="popup-form">
                 <div class="form-group">
-                    <label for="first_name">first_name:</label>
+                    <label for="first_name">First Name:</label>
                     <input type="text" id="first_name" name="first_name" required class="input-field">
                 </div>
                 <div class="form-group">
-                    <label for="last_name">last_name:</label>
+                    <label for="last_name">Last Name:</label>
                     <input type="text" id="last_name" name="last_name" required class="input-field">
                 </div>
                 <div class="form-group">
-                    <label for="phone_number">phone_number:</label>
+                    <label for="phone_number">Phone Number:</label>
                     <input type="text" id="phone_number" name="phone_number" required class="input-field">
                 </div>
                 <div class="form-group">
-                    <label for="email">email:</label>
+                    <label for="email">Email:</label>
                     <input type="text" id="email" name="email" required class="input-field">
                 </div>
                 <div class="form-group">
-                    <label for="gender">gender:</label>
+                    <label for="gender">Gender:</label>
                     <select id="gender" name="gender" required class="select-field">
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
@@ -224,11 +224,11 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="emergency_name">emergency_name:</label>
+                    <label for="emergency_name">Emergency Name:</label>
                     <input type="text" id="emergency_name" name="emergency_name" required class="input-field">
                 </div>
                 <div class="form-group">
-                    <label for="emergency_contact">emergency_contact:</label>
+                    <label for="emergency_contact">Emergency Contact:</label>
                     <input type="text" id="emergency_contact" name="emergency_contact" required class="input-field">
                 </div>
                 <div class="form-group">
@@ -240,7 +240,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="address">address:</label>
+                    <label for="address">Address:</label>
                     <textarea id="address" name="address" required class="textarea-field"></textarea>
                 </div>
                 <div class="form-group">
