@@ -49,9 +49,10 @@ def patients():
              + "  patients.gender as gender, "
              + "  patients.emergency_contact_name as emergency_contact_name, "
              + "  patients.emergency_contact_number as emergency_contact_number "
-             + "FROM patients "
-             + "INNER JOIN users on users.user_id = patients.doctor_id "
-             + " WHERE  patients.rmv = 0 ")
+             + "  FROM patients "
+             + "  INNER JOIN users on users.user_id = patients.doctor_id "
+             + "  WHERE  patients.rmv = 0 "
+             + "  ORDER BY patients.id DESC; ")
 
     cursor.execute(query)
 
@@ -295,7 +296,8 @@ def prescription_details(prescription_id):
              " users.user_id = prescriptions.prescribing_doctor_id "
              " INNER JOIN medication on "
              " medication.id = prescriptions.medication "
-             " WHERE prescriptions.id = %s")
+             " WHERE prescriptions.id = %s"
+             " ORDER BY prescriptions.id DESC; ")
     cursor.execute(query, (prescription_id,))
     prescription_data = cursor.fetchone()
 
@@ -387,7 +389,8 @@ def appointments():
              " INNER JOIN users on "
              " users.user_id = appointments.doctor_id"
              " INNER JOIN appointment_states ON "
-             " appointment_states.id = appointments.state AND appointment_states.rmv = 0; ")
+             " appointment_states.id = appointments.state AND appointment_states.rmv = 0"
+             " ORDER BY appointments.id DESC; ")
 
     cursor.execute(query)
 
