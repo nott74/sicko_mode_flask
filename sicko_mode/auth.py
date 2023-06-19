@@ -14,6 +14,7 @@ from mysql.connector import errorcode
 from mysql.connector.errors import IntegrityError, DatabaseError
 
 from sicko_mode.database import get_connection
+from sicko_mode.models import User
 
 bp = Blueprint("auth", __name__, url_prefix="/auth")
 
@@ -42,9 +43,14 @@ def load_logged_in_user():
     else:
         connection = get_connection()
         cursor = connection.cursor()
-        g.user = (
-            cursor.execute("SELECT * FROM users WHERE user_id = ?", (user_id,)).fetchone()
-        )
+        cursor.execute("SELECT * FROM users WHERE user_id = %s", (user_id,))
+
+        user_row = cursor.fetchone()
+        if user_row is not None:
+            # Create a user object using the constructor
+            g.user = User(*user_row)
+        else:
+            g.user = None
 
 
 @bp.route("/login", methods=("GET", "POST"))
@@ -72,6 +78,7 @@ def login():
             # store the user id in a new session and return to the index
             session['logedin'] = True
             session['username'] = user[columns.index('username')]
+            session['user_id'] = user[columns.index('user_id')]
             session['rgpd'] = user[columns.index('rgpd')]
             if session['rgpd'] == '1':
                 return redirect(url_for('clinic.home'))
@@ -99,6 +106,12 @@ def register():
     if request.method == 'POST':
         username = request.form['username']
         password = request.form['password']
+        first_name = request.form['first_name']
+        last_name = request.form['last_name']
+        birth_date = request.form['birth_date']
+        tlm = request.form['tlm']
+        nif = request.form['nif']
+
         conn = get_connection()
         cursor = conn.cursor()
         error = None
@@ -107,12 +120,15 @@ def register():
             error = 'Username is required.'
         elif not password:
             error = 'Password is required.'
+        elif not birth_date:
+            error = 'Password is required.'
 
         if error is None:
             try:
                 cursor.execute(
-                    "INSERT INTO users (username, password) VALUES (%s, %s)",
-                    (username, hashlib.sha256(password.encode()).hexdigest()),
+                    "INSERT INTO users (username, password, first_name, last_name, birth_date, tlm, nif)" \
+                    "VALUES (%s, %s, %s, %s, %s, %s, %s)",
+                    (username, hashlib.sha256(password.encode()).hexdigest(), first_name, last_name, birth_date, tlm, nif),
                 )
                 conn.commit()
             except mysql.connector.Error as err:
@@ -124,9 +140,12 @@ def register():
                 elif isinstance(err, DatabaseError):
                     # Handle other database errors
                     error = f"An error occurred: {err}"
-        else:
-            return redirect(url_for("auth.login"))
 
-        flash(error)
+                flash(error)
+                return render_template('auth/register.html')
+
+            return render_template('auth/login.html')
+        else:
+            return render_template('auth/register.html')
 
     return render_template('auth/register.html')

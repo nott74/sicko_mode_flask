@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Appointment Details</title>
+    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <style>
+        .appointment-details {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        .appointment-details h2 {
+            margin-bottom: 10px;
+        }
+
+        .appointment-details table {
+            margin-top: 20px;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .appointment-details th,
+        .appointment-details td {
+            padding: 8px;
+            border: 1px solid #ddd;
+        }
+
+        .appointment-details th {
+            background-color: #0077b5;
+            color: #fff;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .appointment-details td {
+            text-align: left;
+        }
+
+        .image-container {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .image-container img {
+            max-width: 400px;
+            max-height: 400px;
+        }
+    </style>
+</head>
+<body>
+<main>
+    <div class="appointment-details">
+        <h2>Appointment Details</h2>
+        <form action="/clinic/appointments/{{ appointment.appointment_id }}/edit" method="POST">
+            <table>
+                <tr>
+                    <th>Appointment ID</th>
+                    <td>{{ appointment.appointment_id }}</td>
+                </tr>
+                <tr>
+                    <th>Patient Name</th>
+                    <td>{{ appointment.patient_name }}</td>
+                </tr>
+                <tr>
+                    <th>Doctor Name</th>
+                    <td>{{ appointment.doctor_name }}</td>
+                </tr>
+                <tr>
+                    <th>Appointment Date</th>
+                    {% if appointment.state == 'Scheduled' or appointment.state == 'Rescheduled' %}
+                        <td><input type="datetime-local" name="appointment_date" min="{{ current_datetime }}"
+                                   value="{{ appointment.appointment_date.strftime('%Y-%m-%dT%H:%M') if appointment.appointment_date else '' }}">
+                        </td>
+                    {% else %}
+                        <td>{{ appointment.appointment_date }}</td>
+                    {% endif %}
+                </tr>
+                <tr>
+                    <th>State</th>
+                    <td>
+                        {% if appointment.state == 'Scheduled' or appointment.state == 'Rescheduled' %}
+                            <select name="appointment_state">
+                                <option value="{{ appointment.state }}">{{ appointment.state }}</option>
+                                <option value="2">Confirmed</option>
+                                <option value="4">Cancelled</option>
+                                <option value="6">No Show</option>
+                            </select>
+                        {% else %}
+                            {{ appointment.state }}
+                        {% endif %}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Observations</th>
+                    <td>{{ appointment.observations }}</td>
+                </tr>
+                <tr>
+                    <th>Record User</th>
+                    <td>{{ appointment.rcd_user }}</td>
+                </tr>
+                <tr>
+                    <th>Recorded Date</th>
+                    <td>{{ appointment.rcd_date }}</td>
+                </tr>
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename=appointment.image_file) }}" alt="Appointment Image">
+                </div>
+            </table>
+            <button type="submit" class="save-button">Save</button>
+        </form>
+    </div>
+</main>
+</body>
+</html>

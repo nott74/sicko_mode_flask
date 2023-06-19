@@ -43,9 +43,9 @@
     <h1>User Profile</h1>
     <div class="profile">
         <h2>Personal Information</h2>
-        <form action="/update-profile" method="POST">
+        <form action="{{ url_for('clinic.update_profile', username=user.username) }}" method="POST">
             <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="{{ user.username }}" readonly><br><br>
+            <input type="text" id="username" name="username" value="{{ user.username }}" readonly disabled><br><br>
             <label for="first_name">First Name:</label>
             <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
             <label for="last_name">Last Name:</label>
@@ -68,7 +68,7 @@
             <div class="popup-content">
                 <span class="close" onclick="closePopup()">&times;</span>
                 <h2>Privacy Policy</h2>
-                <pre id="privacyPolicyText"></pre>
+                <div style="overflow-y: auto; max-height: 500px; margin-top: 10px" id="privacyPolicyText"></div>
             </div>
         </div>
     </div>
