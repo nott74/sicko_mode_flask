@@ -104,9 +104,11 @@
                     <th>Recorded Date</th>
                     <td>{{ appointment.rcd_date }}</td>
                 </tr>
-                <div class="image-container">
-                    <img src="{{ url_for('static', filename=appointment.image_file) }}" alt="Appointment Image">
-                </div>
+                {% if appointment.image_file %}
+                    <div class="image-container">
+                        <img src="{{ url_for('static', filename=appointment.image_file) }}" alt="Appointment Image">
+                    </div>
+                {% endif %}
             </table>
             <button type="submit" class="save-button">Save</button>
         </form>

@@ -555,8 +555,7 @@ def appointment_details(appointment_id):
         current_datetime = datetime.now() + timedelta(days=1)
         current_datetime_str = current_datetime.strftime('%Y-%m-%dT%H:%M')
 
-        rendered_appointment = render_template('appointment_details.html', appointment=appointment, current_datetime=current_datetime_str)
-        return render_template('home.html', content=rendered_appointment)
+        return render_template('appointment_details.html', appointment=appointment, current_datetime=current_datetime_str)
     else:
         # Appointment not found, handle accordingly (e.g., redirect or display an error message)
         return "Appointment not found"
