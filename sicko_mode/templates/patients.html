@@ -7,9 +7,8 @@
     <style>
         table {
             border-collapse: collapse;
-            margin: 20px auto;
-            width: 80%;
-            max-width: 1000px;
+            width: 100%;
+            max-width: none;
             font-size: 18px;
             text-align: left;
         }
@@ -29,14 +28,133 @@
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
+        form {
+            margin: 20px auto;
+            width: 80%;
+            max-width: 1000px;
+        }
+
+        .form-group {
+            margin-bottom: 10px;
+        }
+
+        .form-group label {
+            display: inline-block;
+            width: 120px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 300px;
+            padding: 6px;
+            font-size: 16px;
+        }
+
+        .form-group button {
+            padding: 6px 12px;
+            font-size: 16px;
+        }
+
+        /* Popup styles */
+        .overlay {
+            display: none;
+            position: fixed;
+            z-index: 999;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .popup {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            width: 80%;
+            max-width: 600px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 4px;
+        }
+
+        .popup-close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        /* Button styles */
+        .add-prescription-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #0077b5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 200px;
+            margin-right: 70px;
+        }
+
+        .delete-button,
+        .details-button {
+            padding: 6px 12px;
+            font-size: 14px;
+            background-color: #0077b5;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .delete-button:hover,
+        .details-button:hover {
+            background-color: #005b8a;
+        }
+
+        /* Popup form styles */
+        .popup-form {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .popup-form .form-group label {
+            width: auto;
+            margin-right: 10px;
+        }
+
+        .popup-form .form-group input,
+        .popup-form .form-group textarea,
+        .popup-form .form-group select {
+            width: 300px;
+            padding: 6px;
+            font-size: 16px;
+        }
     </style>
 </head>
 <body>
 <main>
+    <!-- Add Prescription Button -->
+    <button id="openPopupButton" class="add-prescription-button">Add Patient</button>
+
     <h1>Patients List</h1>
     <table>
         <thead>
         <tr>
+            <th>ID</th>
             <th>Name</th>
             <th>Birth Date</th>
             <th>Care Taker</th>
@@ -47,11 +165,13 @@
             <th>Gender</th>
             <th>Emergency Name</th>
             <th>Emergency Contact</th>
+            <th>Actions</th>
         </tr>
         </thead>
         <tbody>
         {% for pacient in patients %}
             <tr>
+                <td>P{{ pacient.id }}</td>
                 <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
                 <td>{{ pacient.birth_date }}</td>
                 <td>{{ pacient.care_taker }}</td>
@@ -62,10 +182,89 @@
                 <td>{{ pacient.gender }}</td>
                 <td>{{ pacient.emergency_contact_name }}</td>
                 <td>{{ pacient.emergency_contact_number }}</td>
+                <td>
+                    <!-- Delete Button -->
+                    <form method="POST" action="{{ url_for('clinic.delete_patient', patient_id=pacient.id) }}">
+                        <button type="submit" class="delete-button">Delete</button>
+                    </form>
+                </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+
+    <!-- Popup Form -->
+    <div id="popupOverlay" class="overlay">
+        <div id="popup" class="popup">
+            <span id="closePopup" class="popup-close">&times;</span>
+            <h1>Add Patient</h1>
+            <form method="POST" action="{{ url_for('clinic.add_patient') }}" class="popup-form">
+                <div class="form-group">
+                    <label for="first_name">first_name:</label>
+                    <input type="text" id="first_name" name="first_name" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="last_name">last_name:</label>
+                    <input type="text" id="last_name" name="last_name" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="phone_number">phone_number:</label>
+                    <input type="text" id="phone_number" name="phone_number" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="email">email:</label>
+                    <input type="text" id="email" name="email" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="gender">gender:</label>
+                    <select id="gender" name="gender" required class="select-field">
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="emergency_name">emergency_name:</label>
+                    <input type="text" id="emergency_name" name="emergency_name" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="emergency_contact">emergency_contact:</label>
+                    <input type="text" id="emergency_contact" name="emergency_contact" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <label for="doctor_name">Doctor:</label>
+                    <select id="doctor_name" name="doctor_name" required class="select-field">
+                        {% for doctor in doctors %}
+                            <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="address">address:</label>
+                    <textarea id="address" name="address" required class="textarea-field"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="birth_date">Birth Date:</label>
+                    <input type="date" id="birth_date" name="birth_date" required class="input-field">
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn-submit">Add Patient</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("openPopupButton").addEventListener("click", function() {
+            document.getElementById("popupOverlay").style.display = "block";
+            document.getElementById("popup").style.display = "block";
+        });
+
+        document.getElementById("closePopup").addEventListener("click", function() {
+            document.getElementById("popupOverlay").style.display = "none";
+            document.getElementById("popup").style.display = "none";
+        });
+    </script>
 </main>
 </body>
 </html>
