@@ -30,34 +30,40 @@ def home_rgpd():
     return render_template('home_rgpd.html', username=session['username'])
 
 
-@bp.route('/pacients')
-def pacients():
+@bp.route('/patients')
+def patients():
     connection = get_connection()
     cursor = connection.cursor()
 
     query = ("SELECT "
-             + "  pacients.id as id, "
-             + "  pacients.first_name as first_name, "
-             + "  pacients.last_name as last_name, "
-             + "  pacients.care_taker as care_taker, "
-             + "  pacients.doctor_id as doctor_id, "
-             + "  pacients.birth_date as birth_date, "
-             + "  CONCAT(users.first_name, ' ' , users.last_name) as doctor_name "
-             + "FROM pacients "
-             + "INNER JOIN users on users.user_id = pacients.doctor_id")
+             + "  patients.id as id, "
+             + "  patients.first_name as first_name, "
+             + "  patients.last_name as last_name, "
+             + "  patients.care_taker as care_taker, "
+             + "  patients.doctor_id as doctor_id, "
+             + "  patients.birth_date as birth_date, "
+             + "  CONCAT(users.first_name, ' ' , users.last_name) as doctor_name,"
+             + "  patients.address as address, "
+             + "  patients.phone_number as phone_number, "
+             + "  patients.email as email, "
+             + "  patients.gender as gender, "
+             + "  patients.emergency_contact_name as emergency_contact_name, "
+             + "  patients.emergency_contact_number as emergency_contact_number "
+             + "FROM patients "
+             + "INNER JOIN users on users.user_id = patients.doctor_id")
 
     cursor.execute(query)
 
     pacient_list = []
 
-    for id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name in cursor.fetchall():
-        pacient_list.append(Pacient(id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name))
+    for id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name, address, phone_number, email, gender, emergency_contact_name, emergency_contact_number in cursor.fetchall():
+        pacient_list.append(Pacient(id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name, address, phone_number, email, gender, emergency_contact_name, emergency_contact_number))
 
     cursor.close()
     connection.close()
 
-    rendered_pacients = render_template('pacients.html', pacients=pacient_list)
-    return render_template('home.html', content=rendered_pacients)
+    rendered_patients = render_template('patients.html', patients=pacient_list)
+    return render_template('home.html', content=rendered_patients)
 
 
 @bp.route('/accept_rgpd')
@@ -113,7 +119,7 @@ def prescriptions():
 
     query = ("SELECT "
              " prescriptions.id as prescription_id, "
-             " CONCAT(pacients.first_name, ' ' , pacients.last_name) as patient_name, "
+             " CONCAT(patients.first_name, ' ' , patients.last_name) as patient_name, "
              " CONCAT(users.first_name, ' ' , users.last_name) as doctor_name, "
              " medication.name as medication, "
              " prescriptions.dosage as dosage, "
@@ -121,8 +127,8 @@ def prescriptions():
              " prescriptions.prescription_date as prescription_date "
              " FROM "
              " prescriptions "
-             " INNER JOIN pacients on "
-             " pacients.id = prescriptions.patient_id "
+             " INNER JOIN patients on "
+             " patients.id = prescriptions.patient_id "
              " INNER JOIN users on "
              " users.user_id = prescriptions.prescribing_doctor_id "
              " INNER JOIN medication on "
@@ -140,9 +146,9 @@ def prescriptions():
 
     # Query the patient names for the select field
     patients_query = """
-                SELECT id, pacients.first_name, pacients.last_name, pacients.care_taker, doctor_id, pacients.birth_date, CONCAT(users.first_name, ' ', users.last_name) as doctor_name
-                FROM pacients
-                INNER JOIN users ON users.user_id = pacients.doctor_id
+                SELECT id, patients.first_name, patients.last_name, patients.care_taker, doctor_id, patients.birth_date, CONCAT(users.first_name, ' ', users.last_name) as doctor_name
+                FROM patients
+                INNER JOIN users ON users.user_id = patients.doctor_id
             """
 
     cursor.execute(patients_query)
@@ -235,7 +241,7 @@ def prescription_details(prescription_id):
     # Retrieve the prescription details for the given prescription_id
     query = ("SELECT "
              " CONCAT('P', prescriptions.id) as prescription_id, "
-             " CONCAT(pacients.first_name, ' ', pacients.last_name) as patient_name, "
+             " CONCAT(patients.first_name, ' ', patients.last_name) as patient_name, "
              " CONCAT(users.first_name, ' ', users.last_name) as doctor_name, "
              " medication.name as medication, "
              " prescriptions.dosage as dosage, "
@@ -243,8 +249,8 @@ def prescription_details(prescription_id):
              " prescriptions.prescription_date as prescription_date "
              " FROM "
              " prescriptions "
-             " INNER JOIN pacients on "
-             " pacients.id = prescriptions.patient_id "
+             " INNER JOIN patients on "
+             " patients.id = prescriptions.patient_id "
              " INNER JOIN users on "
              " users.user_id = prescriptions.prescribing_doctor_id "
              " INNER JOIN medication on "
@@ -268,8 +274,8 @@ def prescription_details(prescription_id):
             prescription_data[6]
         )
 
-        rendered_prescriptions = render_template('prescription_details.html', prescription=prescription)
-        return render_template('home.html', content=rendered_prescriptions)
+        # rendered_prescriptions = render_template('prescription_details.html', prescription=prescription)
+        return render_template('prescription_details.html', prescription=prescription)
     else:
         # Prescription not found, handle accordingly (e.g., redirect or display an error message)
         return "Prescription not found"

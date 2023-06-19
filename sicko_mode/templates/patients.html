@@ -33,7 +33,7 @@
 </head>
 <body>
 <main>
-    <h1>Pacients List</h1>
+    <h1>Patients List</h1>
     <table>
         <thead>
         <tr>
@@ -41,15 +41,27 @@
             <th>Birth Date</th>
             <th>Care Taker</th>
             <th>Doctor</th>
+            <th>Address</th>
+            <th>Phone Number</th>
+            <th>Email</th>
+            <th>Gender</th>
+            <th>Emergency Name</th>
+            <th>Emergency Contact</th>
         </tr>
         </thead>
         <tbody>
-        {% for pacient in pacients %}
+        {% for pacient in patients %}
             <tr>
                 <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
                 <td>{{ pacient.birth_date }}</td>
                 <td>{{ pacient.care_taker }}</td>
                 <td>{{ pacient.doctor_name }}</td>
+                <td>{{ pacient.address }}</td>
+                <td>{{ pacient.phone_number }}</td>
+                <td>{{ pacient.email }}</td>
+                <td>{{ pacient.gender }}</td>
+                <td>{{ pacient.emergency_contact_name }}</td>
+                <td>{{ pacient.emergency_contact_number }}</td>
             </tr>
         {% endfor %}
         </tbody>
