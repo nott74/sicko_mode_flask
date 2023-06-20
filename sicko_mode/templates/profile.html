@@ -39,29 +39,48 @@
     </style>
 </head>
 <body>
-<main>
-    <h1>User Profile</h1>
-    <div class="profile">
-        <h2>Personal Information</h2>
-        <form action="{{ url_for('clinic.update_profile', username=user.username) }}" method="POST">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" value="{{ user.username }}" readonly disabled><br><br>
-            <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
-            <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br><br>
-            <label for="birth_date">Birth Date:</label>
-            <input type="text" id="birth_date" name="birth_date" value="{{ user.birth_date }}"><br><br>
-            <label for="tlm">Phone Number:</label>
-            <input type="text" id="tlm" name="tlm" value="{{ user.tlm }}"><br><br>
-            <label for="nif">NIF:</label>
-            <input type="text" id="nif" name="nif" value="{{ user.nif }}"><br><br>
+<h2 class="margin-auto">User Profile</h2>
+<div class="grid-1-1 grid-flex">
+    <div class="profile grid-1-2">
+        <h3>Personal Information</h3>
+        <form class="style padding-20" action="{{ url_for('clinic.update_profile', username=user.username) }}"
+              method="POST">
+            <div class="grid-1-1 grid-flex gap-20">
+                <div class="grid-1-2">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" value="{{ user.username }}" readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="nif">NIF:</label>
+                    <input type="text" id="nif" name="nif" value="{{ user.nif }}"><br><br>
+                </div>
+            </div>
+            <div class="grid-1-1 grid-flex gap-20">
+                <div class="grid-1-2">
+                    <label for="first_name">First Name:</label>
+                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}"><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="last_name">Last Name:</label>
+                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}"><br><br>
+                </div>
+            </div>
+            <div class="grid-1-1 grid-flex gap-20">
+                <div class="grid-1-2">
+                    <label for="birth_date">Birth Date:</label>
+                    <input type="text" id="birth_date" name="birth_date" value="{{ user.birth_date }}"><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="tlm">Phone Number:</label>
+                    <input type="text" id="tlm" name="tlm" value="{{ user.tlm }}"><br><br>
+                </div>
+            </div>
             <input type="submit" value="Update">
         </form>
     </div>
-
-    <div class="privacy-policy">
-        <h2>Privacy Policy</h2>
+    <div class="privacy-policy grid-1-2">
+        <h3>Privacy Policy</h3>
         <button onclick="openPopup()">View Privacy Policy</button>
         <!-- Profile popup -->
         <div class="popup" id="profilePopup">
@@ -72,24 +91,24 @@
             </div>
         </div>
     </div>
-    <script>
-        // Function to open the popup
-        function openPopup() {
-            document.getElementById("profilePopup").style.display = "block";
-        }
+</div>
+<script>
+    // Function to open the popup
+    function openPopup() {
+        document.getElementById("profilePopup").style.display = "block";
+    }
 
-        // Function to close the popup
-        function closePopup() {
-            document.getElementById("profilePopup").style.display = "none";
-        }
+    // Function to close the popup
+    function closePopup() {
+        document.getElementById("profilePopup").style.display = "none";
+    }
 
-        // Load the privacy policy text from the PRIVACY_POLICY file
-        fetch("../static/PRIVACY_POLICY.txt")
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById("privacyPolicyText").textContent = data;
-            });
-    </script>
-</main>
+    // Load the privacy policy text from the PRIVACY_POLICY file
+    fetch("../static/PRIVACY_POLICY.txt")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("privacyPolicyText").textContent = data;
+        });
+</script>
 </body>
 </html>

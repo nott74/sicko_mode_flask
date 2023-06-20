@@ -5,36 +5,6 @@
     <title>Sicko Clinic</title>
     <link rel="stylesheet" type="text/css" href="../static/style.css">
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: none;
-            font-size: 18px;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #0077b5;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        form {
-            margin: 20px auto;
-            width: 80%;
-            max-width: 1000px;
-        }
-
         .form-group {
             margin-bottom: 10px;
         }
@@ -81,7 +51,7 @@
             transform: translate(-50%, -50%);
             background-color: #fff;
             padding: 20px;
-            border-radius: 4px;
+            border-radius: 5px;
         }
 
         .popup-close {
@@ -93,20 +63,7 @@
         }
 
         /* Button styles */
-        .add-prescription-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #0077b5;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 200px;
-            margin-right: 70px;
-        }
+
 
         .delete-button,
         .details-button {
@@ -146,152 +103,153 @@
     </style>
 </head>
 <body>
-<main>
-    <!-- Add Prescription Button -->
-    <button id="openPopupButton" class="add-prescription-button">Add Patient</button>
-
-    <h1>Patients List</h1>
-    <table>
-        <thead>
-        <tr>
-            <th>ID</th>
-            <th>Name</th>
-            <th>Birth Date</th>
-            <th>Doctor</th>
-            <th>Address</th>
-            <th>Phone Number</th>
-            <th>Email</th>
-            <th>Gender</th>
-            <th>Emergency Name</th>
-            <th>Emergency Contact</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for pacient in patients %}
-            <tr>
-                <td>P{{ pacient.id }}</td>
-                <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
-                <td>{{ pacient.birth_date }}</td>
-                <td>{{ pacient.doctor_name }}</td>
-                <td>{{ pacient.address }}</td>
-                <td>{{ pacient.phone_number }}</td>
-                <td>{{ pacient.email }}</td>
-                <td>{{ pacient.gender }}</td>
-                <td>{{ pacient.emergency_contact_name }}</td>
-                <td>{{ pacient.emergency_contact_number }}</td>
-                <td>
-                    <!-- Delete Button -->
-                    <form method="POST" action="{{ url_for('clinic.delete_patient', patient_id=pacient.id) }}">
-                        <button type="submit" class="delete-button">Delete</button>
-                    </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <!-- Popup Form -->
-    <div id="popupOverlay" class="overlay">
-        <div id="popup" class="popup">
-            <span id="closePopup" class="popup-close">&times;</span>
-            <h2>Add Patient</h2>
-            <form method="POST" action="{{ url_for('clinic.add_patient') }}" class="popup-form" onsubmit="return validateForm()">
-                <div class="form-group">
-                    <label for="first_name">First Name:</label>
-                    <input type="text" id="first_name" name="first_name" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="last_name">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="phone_number">Phone Number:</label>
-                    <input type="number" id="phone_number" name="phone_number" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="text" id="email" name="email" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="gender">Gender:</label>
-                    <select id="gender" name="gender" required class="select-field">
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="emergency_name">Emergency Name:</label>
-                    <input type="text" id="emergency_name" name="emergency_name" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="emergency_contact">Emergency Contact:</label>
-                    <input type="number" id="emergency_contact" name="emergency_contact" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <label for="doctor_name">Doctor:</label>
-                    <select id="doctor_name" name="doctor_name" required class="select-field">
-                        {% for doctor in doctors %}
-                            <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="address">Address:</label>
-                    <textarea id="address" name="address" required class="textarea-field"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="birth_date">Birth Date:</label>
-                    <input type="date" id="birth_date" name="birth_date" required class="input-field">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn-submit">Add Patient</button>
-                </div>
-            </form>
-        </div>
+<div class="grid-1-1 grid-flex margin-bottom-20">
+    <h2 class="grid-flex-grow">Patients List</h2>
+    <div >
+        <button id="openPopupButton">Add Patient</button>
     </div>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Birth Date</th>
+        <th>Doctor</th>
+        <th>Address</th>
+        <th>Phone Number</th>
+        <th>Email</th>
+        <th>Gender</th>
+        <th>Emergency Name</th>
+        <th>Emergency Contact</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for pacient in patients %}
+        <tr>
+            <td>P{{ pacient.id }}</td>
+            <td>{{ pacient.first_name }} {{ pacient.last_name }}</td>
+            <td>{{ pacient.birth_date }}</td>
+            <td>{{ pacient.doctor_name }}</td>
+            <td>{{ pacient.address }}</td>
+            <td>{{ pacient.phone_number }}</td>
+            <td>{{ pacient.email }}</td>
+            <td>{{ pacient.gender }}</td>
+            <td>{{ pacient.emergency_contact_name }}</td>
+            <td>{{ pacient.emergency_contact_number }}</td>
+            <td>
+                <!-- Delete Button -->
+                <form method="POST" action="{{ url_for('patients.delete_patient', patient_id=pacient.id) }}">
+                    <button type="submit" class="delete-button">Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
 
-    <script>
-        document.getElementById("openPopupButton").addEventListener("click", function() {
-            document.getElementById("popupOverlay").style.display = "block";
-            document.getElementById("popup").style.display = "block";
-        });
+<!-- Popup Form -->
+<div id="popupOverlay" class="overlay">
+    <div id="popup" class="popup">
+        <span id="closePopup" class="popup-close">&times;</span>
+        <h2>Add Patient</h2>
+        <form method="POST" action="{{ url_for('patients.add_patient') }}" class="popup-form"
+              onsubmit="return validateForm()">
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <input type="text" id="first_name" name="first_name" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <input type="text" id="last_name" name="last_name" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="phone_number">Phone Number:</label>
+                <input type="number" id="phone_number" name="phone_number" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <input type="text" id="email" name="email" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" required class="select-field">
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="emergency_name">Emergency Name:</label>
+                <input type="text" id="emergency_name" name="emergency_name" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="emergency_contact">Emergency Contact:</label>
+                <input type="number" id="emergency_contact" name="emergency_contact" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="doctor_name">Doctor:</label>
+                <select id="doctor_name" name="doctor_name" required class="select-field">
+                    {% for doctor in doctors %}
+                        <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="address">Address:</label>
+                <textarea id="address" name="address" required class="textarea-field"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="birth_date">Birth Date:</label>
+                <input type="date" id="birth_date" name="birth_date" required class="input-field">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Add Patient</button>
+            </div>
+        </form>
+    </div>
+</div>
 
-        document.getElementById("closePopup").addEventListener("click", function() {
-            document.getElementById("popupOverlay").style.display = "none";
-            document.getElementById("popup").style.display = "none";
-        });
+<script>
+    document.getElementById("openPopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "block";
+        document.getElementById("popup").style.display = "block";
+    });
 
-        function validateForm() {
-    var phoneNumberInput = document.getElementById("phone_number");
-    var emailInput = document.getElementById("email");
-    var birthDateInput = document.getElementById("birth_date");
+    document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+        document.getElementById("popup").style.display = "none";
+    });
 
-    // Validate phone number
-    if (phoneNumberInput.value.length !== 9) {
-      alert("Phone number must have exactly 9 digits");
-      return false;
+    function validateForm() {
+        var phoneNumberInput = document.getElementById("phone_number");
+        var emailInput = document.getElementById("email");
+        var birthDateInput = document.getElementById("birth_date");
+
+        // Validate phone number
+        if (phoneNumberInput.value.length !== 9) {
+            alert("Phone number must have exactly 9 digits");
+            return false;
+        }
+
+        // Validate email format
+        var emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+        if (!emailPattern.test(emailInput.value)) {
+            alert("Invalid email format");
+            return false;
+        }
+
+        // Validate birth date
+        var currentDate = new Date();
+        var selectedDate = new Date(birthDateInput.value);
+        if (selectedDate >= currentDate) {
+            alert("Birth date must be prior to the current date");
+            return false;
+        }
+
+        return true;
     }
-
-    // Validate email format
-    var emailPattern = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
-    if (!emailPattern.test(emailInput.value)) {
-      alert("Invalid email format");
-      return false;
-    }
-
-    // Validate birth date
-    var currentDate = new Date();
-    var selectedDate = new Date(birthDateInput.value);
-    if (selectedDate >= currentDate) {
-      alert("Birth date must be prior to the current date");
-      return false;
-    }
-
-    return true;
-  }
-    </script>
-</main>
+</script>
 </body>
 </html>

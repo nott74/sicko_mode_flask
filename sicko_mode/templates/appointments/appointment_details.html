@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Appointment Details</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <style>
         .appointment-details {
             margin: 20px auto;
@@ -50,10 +50,9 @@
     </style>
 </head>
 <body>
-<main>
     <div class="appointment-details">
         <h2>Appointment Details</h2>
-        <form action="/clinic/appointments/{{ appointment.appointment_id }}/edit" method="POST">
+        <form action="{{ url_for('appointments.add_appointment') }}" method="POST">
             <table>
                 <tr>
                     <th>Appointment ID</th>
@@ -113,6 +112,5 @@
             <button type="submit" class="save-button">Save</button>
         </form>
     </div>
-</main>
 </body>
 </html>

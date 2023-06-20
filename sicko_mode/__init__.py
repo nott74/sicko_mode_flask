@@ -29,10 +29,13 @@ def create_app(test_config=None):
         return redirect(url_for('auth.login'))
 
     # apply the blueprints to the app
-    from sicko_mode import database, auth, clinic
+    from sicko_mode import database, auth, clinic, appointments, patients, prescriptions
 
     app.register_blueprint(auth.bp)
     app.register_blueprint(clinic.bp)
+    app.register_blueprint(appointments.bp)
+    app.register_blueprint(patients.bp)
+    app.register_blueprint(prescriptions.bp)
 
     # make url_for('index') == url_for('blog.index')
     # in another app, you might define a separate main index here with

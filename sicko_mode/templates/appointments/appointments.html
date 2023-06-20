@@ -3,38 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Sicko Clinic</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
+    <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            max-width: none;
-            font-size: 18px;
-            text-align: left;
-        }
-
-        th, td {
-            padding: 12px;
-            border: 1px solid #ddd;
-        }
-
-        th {
-            background-color: #0077b5;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
-        }
-
-        form {
-            margin: 20px auto;
-            width: 80%;
-            max-width: 1000px;
-        }
-
         .form-group {
             margin-bottom: 10px;
         }
@@ -92,22 +62,6 @@
             cursor: pointer;
         }
 
-        /* Button styles */
-        .add-appointment-button {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #0077b5;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            margin-top: 200px;
-            margin-right: 70px;
-        }
-
         .delete-button,
         .details-button {
             padding: 6px 12px;
@@ -146,11 +100,12 @@
     </style>
 </head>
 <body>
-<main>
-    <!-- Add Appointment Button -->
-    <button id="openPopupButton" class="add-appointment-button">Add Appointment</button>
-
-    <h1>Appointment List</h1>
+<div class="grid-1-1 grid-flex margin-bottom-20">
+    <h2 class="grid-flex-grow">Appointment List</h2>
+    <div >
+        <button id="openPopupButton" >Add Appointment</button>
+    </div>
+</div>
     <table>
         <thead>
         <tr>
@@ -171,13 +126,13 @@
                 <td>
                     <!-- Delete Button -->
                     <form method="POST"
-                          action="{{ url_for('clinic.cancel_appointment', appointment_id=appointment.appointment_id) }}">
+                          action="{{ url_for('appointments.cancel_appointment', appointment_id=appointment.appointment_id) }}">
                         <button type="submit" class="delete-button">Cancel</button>
                     </form>
 
                     <!-- Details Button -->
                     <form method="GET"
-                          action="{{ url_for('clinic.appointment_details', appointment_id=appointment.appointment_id) }}">
+                          action="{{ url_for('appointments.appointment_details', appointment_id=appointment.appointment_id) }}">
                         <button type="submit" class="details-button">Details</button>
                     </form>
                 </td>
@@ -190,7 +145,7 @@
     <div id="popupOverlay" class="overlay">
         <div id="popup" class="popup">
             <span id="closePopup" class="popup-close">&times;</span>
-            <form method="POST" action="{{ url_for('clinic.add_appointment') }}" class="popup-form" enctype="multipart/form-data">
+            <form method="POST" action="{{ url_for('appointments.add_appointment') }}" class="popup-form" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="patient_name">Patient:</label>
                     <select id="patient_name" name="patient_name" required class="select-field">
@@ -238,6 +193,5 @@
             document.getElementById("popup").style.display = "none";
         });
     </script>
-</main>
 </body>
 </html>
