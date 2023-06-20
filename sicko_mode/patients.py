@@ -4,7 +4,7 @@ from flask import render_template, redirect, url_for, Blueprint, request
 from sicko_mode.database import get_connection
 from sicko_mode.models import Patient, Doctor
 
-bp = Blueprint("patients", __name__, url_prefix="/patients")
+bp = Blueprint("patients", __name__, url_prefix="/clinic/patients")
 
 
 @bp.route('/')

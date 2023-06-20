@@ -16,7 +16,7 @@ from mysql.connector.errors import IntegrityError, DatabaseError
 from sicko_mode.database import get_connection
 from sicko_mode.models import User
 
-bp = Blueprint("auth", __name__, url_prefix="/auth")
+bp = Blueprint("auth", __name__, url_prefix="/clinic/auth")
 
 
 def login_required(view):

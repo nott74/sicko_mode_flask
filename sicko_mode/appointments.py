@@ -8,7 +8,7 @@ from werkzeug.utils import secure_filename
 from sicko_mode.database import get_connection
 from sicko_mode.models import Patient, Doctor, Medication, Appointment
 
-bp = Blueprint("appointments", __name__, url_prefix="/appointments")
+bp = Blueprint("appointments", __name__, url_prefix="/clinic/appointments")
 
 
 @bp.route('/')
