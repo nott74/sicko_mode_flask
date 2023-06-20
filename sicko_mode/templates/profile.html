@@ -3,40 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <title>Sicko Clinic</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <style>
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .popup-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background-color: #fff;
-            width: 80%;
-            max-width: 600px;
-            margin: 20px auto;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .close {
-            align-self: flex-end;
-            font-size: 18px;
-            font-weight: bold;
-            color: #333;
-            cursor: pointer;
-        }
-    </style>
 </head>
 <body>
 <h2 class="margin-auto">User Profile</h2>
@@ -81,27 +47,29 @@
     </div>
     <div class="grid-1-3">
         <h3>Privacy Policy</h3>
-        <button onclick="openPopup()">View Privacy Policy</button>
+        <button id="openPopupButton" onclick="openPopup()">View Privacy Policy</button>
         <!-- Profile popup -->
-        <div class="popup" id="profilePopup">
-            <div class="popup-content">
-                <span class="close" onclick="closePopup()">&times;</span>
-                <h2>Privacy Policy</h2>
-                <div style="overflow-y: auto; max-height: 500px; margin-top: 10px" id="privacyPolicyText"></div>
+        <div id="popupOverlay" class="overlay">
+            <div class="popup" id="popup" >
+                <div class="popup-content">
+                    <span id="closePopup"  class="close" onclick="closePopup()">&times;</span>
+                    <h2>Privacy Policy</h2>
+                    <div style="overflow-y: auto; max-height: 500px; margin-top: 10px" id="privacyPolicyText"></div>
+                </div>
             </div>
         </div>
     </div>
 </div>
 <script>
-    // Function to open the popup
-    function openPopup() {
-        document.getElementById("profilePopup").style.display = "block";
-    }
+    document.getElementById("openPopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "block";
+        document.getElementById("popup").style.display = "block";
+    });
 
-    // Function to close the popup
-    function closePopup() {
-        document.getElementById("profilePopup").style.display = "none";
-    }
+    document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+        document.getElementById("popup").style.display = "none";
+    });
 
     // Load the privacy policy text from the PRIVACY_POLICY file
     fetch("../static/PRIVACY_POLICY.txt")

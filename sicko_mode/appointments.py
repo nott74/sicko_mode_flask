@@ -17,7 +17,7 @@ def appointment_list():
     cursor = connection.cursor()
 
     if g.user.user_type == 2:
-        aux_where = " WHERE appointments.doctor_id = %s"
+        aux_where = " WHERE patients.doctor_id = %s"
         values = (g.user.user_id,)
     elif g.user.user_type == 3:
         aux_where = " WHERE patients.care_taker = %s"

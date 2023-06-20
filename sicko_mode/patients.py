@@ -13,7 +13,7 @@ def patient_list():
     cursor = connection.cursor()
 
     if g.user.user_type == 2:
-        aux_where = " AND appointments.doctor_id = %s"
+        aux_where = " AND patients.doctor_id = %s"
         values = (g.user.user_id,)
     elif g.user.user_type == 3:
         aux_where = " AND patients.care_taker = %s"
