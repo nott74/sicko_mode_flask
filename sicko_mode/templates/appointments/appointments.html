@@ -3,195 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <title>Sicko Clinic</title>
-    <link rel="stylesheet" type="text/css" href="../../static/style.css">
-    <style>
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .form-group label {
-            display: inline-block;
-            width: 120px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 300px;
-            padding: 6px;
-            font-size: 16px;
-        }
-
-        .form-group button {
-            padding: 6px 12px;
-            font-size: 16px;
-        }
-
-        /* Popup styles */
-        .overlay {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            width: 80%;
-            max-width: 600px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 4px;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        .delete-button,
-        .details-button {
-            padding: 6px 12px;
-            font-size: 14px;
-            background-color: #0077b5;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover,
-        .details-button:hover {
-            background-color: #005b8a;
-        }
-
-        /* Popup form styles */
-        .popup-form {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .popup-form .form-group label {
-            width: auto;
-            margin-right: 10px;
-        }
-
-        .popup-form .form-group input,
-        .popup-form .form-group textarea,
-        .popup-form .form-group select {
-            width: 300px;
-            padding: 6px;
-            font-size: 16px;
-        }
-    </style>
 </head>
 <body>
 <div class="grid-1-1 grid-flex margin-bottom-20">
-    <h2 class="grid-flex-grow">Appointment List</h2>
-    <div >
-        <button id="openPopupButton" >Add Appointment</button>
+    <h2 class="grid-flex-grow margin-auto">Appointment List</h2>
+    <div>
+        <button id="openPopupButton">Add Appointment</button>
     </div>
 </div>
-    <table>
-        <thead>
+<table>
+    <thead>
+    <tr>
+        <th>Date</th>
+        <th>Doctor</th>
+        <th>Patient</th>
+        <th>State</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% for appointment in appointments %}
         <tr>
-            <th>Date</th>
-            <th>Doctor</th>
-            <th>Patient</th>
-            <th>State</th>
-            <th>Actions</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for appointment in appointments %}
-            <tr>
-                <td>{{ appointment.appointment_date }}</td>
-                <td>{{ appointment.patient_name }}</td>
-                <td>{{ appointment.doctor_name }}</td>
-                <td>{{ appointment.state }}</td>
-                <td>
-                    <!-- Delete Button -->
-                    <form method="POST"
-                          action="{{ url_for('appointments.cancel_appointment', appointment_id=appointment.appointment_id) }}">
-                        <button type="submit" class="delete-button">Cancel</button>
-                    </form>
-
+            <td>{{ appointment.appointment_date }}</td>
+            <td>{{ appointment.patient_name }}</td>
+            <td>{{ appointment.doctor_name }}</td>
+            <td>{{ appointment.state_name }}</td>
+            <td>
+                <div class="grid-flex gap-20">
                     <!-- Details Button -->
                     <form method="GET"
                           action="{{ url_for('appointments.appointment_details', appointment_id=appointment.appointment_id) }}">
                         <button type="submit" class="details-button">Details</button>
                     </form>
-                </td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
 
-    <!-- Popup Form -->
-    <div id="popupOverlay" class="overlay">
-        <div id="popup" class="popup">
-            <span id="closePopup" class="popup-close">&times;</span>
-            <form method="POST" action="{{ url_for('appointments.add_appointment') }}" class="popup-form" enctype="multipart/form-data">
-                <div class="form-group">
-                    <label for="patient_name">Patient:</label>
-                    <select id="patient_name" name="patient_name" required class="select-field">
-                        {% for patient in patients %}
-                            <option value="{{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
-                        {% endfor %}
-                    </select>
+                    {% if appointment.state_id == 1 or appointment.state_id == 5 %}
+                        <!-- Delete Button -->
+                        <form method="POST"
+                              action="{{ url_for('appointments.update_appointment', appointment_id=appointment.appointment_id) }}">
+                            <button type="submit" class="delete-button">Cancel</button>
+                        </form>
+                    {% endif %}
                 </div>
-                <div class="form-group">
-                    <label for="doctor_name">Doctor:</label>
-                    <select id="doctor_name" name="doctor_name" required class="select-field">
-                        {% for doctor in doctors %}
-                            <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="observations">Observations:</label>
-                    <textarea id="observations" name="observations" required class="textarea-field"></textarea>
-                </div>
-                <div class="form-group">
-                    <label for="appointment_date">Date:</label>
-                    <input type="datetime-local" id="appointment_date" name="appointment_date" required
-                           class="input-field" min="{{ current_datetime }}">
-                </div>
-                <div class="form-group">
-                    <label for="image_file">Image File:</label>
-                    <input type="file" id="image_file" name="image_file" accept="image/*" class="input-field">
-                </div>
-                <div class="form-group">
-                    <button type="submit" class="btn-submit">Add Appointment</button>
-                </div>
-            </form>
-        </div>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<!-- Popup Form -->
+<div id="popupOverlay" class="overlay">
+    <div id="popup" class="popup">
+        <span id="closePopup" class="popup-close">&times;</span>
+        <form method="POST" action="{{ url_for('appointments.add_appointment') }}" class="popup-form"
+              enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="patient_name">Patient:</label>
+                <select id="patient_name" name="patient_name" required class="select-field">
+                    {% for patient in patients %}
+                        <option value="{{ patient.id }}">{{ patient.first_name }} {{ patient.last_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="doctor_name">Doctor:</label>
+                <select id="doctor_name" name="doctor_name" required class="select-field">
+                    {% for doctor in doctors %}
+                        <option value="{{ doctor.id }}">{{ doctor.first_name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="observations">Observations:</label>
+                <textarea id="observations" name="observations" required class="textarea-field"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="appointment_date">Date:</label>
+                <input type="datetime-local" id="appointment_date" name="appointment_date" required
+                       class="input-field" min="{{ current_datetime }}">
+            </div>
+            <div class="form-group">
+                <label for="image_file">Image File:</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*" class="input-field">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Add Appointment</button>
+            </div>
+        </form>
     </div>
+</div>
 
-    <script>
-        document.getElementById("openPopupButton").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "block";
-            document.getElementById("popup").style.display = "block";
-        });
+<script>
+    document.getElementById("openPopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "block";
+        document.getElementById("popup").style.display = "block";
+    });
 
-        document.getElementById("closePopup").addEventListener("click", function () {
-            document.getElementById("popupOverlay").style.display = "none";
-            document.getElementById("popup").style.display = "none";
-        });
-    </script>
+    document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+        document.getElementById("popup").style.display = "none";
+    });
+</script>
 </body>
 </html>

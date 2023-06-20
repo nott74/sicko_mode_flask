@@ -11,52 +11,56 @@
         <img src="../static/img/logo_2.png" alt="Sicko Clinic Logo">
         <h1>Sicko Clinic</h1>
     </div>
-
 </header>
 <main>
-    <h1>Welcome to Sicko Clinic, {{ username }}! You have not accepted the RGPD!</h1>
+    <h1>Welcome to Sicko Clinic, {{ username }}! You have not accepted the GDPR!</h1>
     <p>Here at Sicko Clinic, we're dedicated to providing the best healthcare services for our patients.
         Whether you're in need of a routine checkup or a specialized procedure, we've got you covered.
         Take a look around and see what we have to offer!
-        But first you have to accept the GRPD:
+        But first you have to accept the GDPR:
     </p>
-    <br>
-    <p>
-        At Sicko Clinic, we take data protection and GDPR compliance seriously. We understand that patients trust us
-        with their personal data, and we are committed to ensuring that their data is protected.
-
-        We collect personal data such as patients' names, addresses, contact information, medical history, and treatment
-        plans. We only collect data that is necessary for the provision of medical services and for legitimate purposes
-        such as billing and record-keeping.
-
-        We use technical and organizational measures to protect personal data from unauthorized access, alteration,
-        disclosure, and destruction. We regularly review our security measures to ensure that they are effective and
-        up-to-date.
-
-        We provide access controls to ensure that only authorized personnel have access to personal data. We use strong
-        passwords, user accounts, and role-based access controls to limit access to personal data based on job
-        responsibilities.
-
-        We maintain accurate and up-to-date personal data and ensure that patients have the right to access, correct,
-        and delete their data. We provide transparent information about our data processing activities and obtain clear
-        and specific consent from patients to process their personal data.
-
-        In the event of a data breach, we will notify the supervisory authority within 72 hours and take appropriate
-        measures to mitigate the impact of the breach on patients.
-        We are committed to complying with all applicable data protection laws, regulations, and industry standards, and
-        we will regularly review and update our GDPR compliance policy to ensure that it remains effective and relevant.
+    <p id="privacyPolicyText">
+{#        At Sicko Clinic, we take data protection and GDPR compliance seriously. We understand that patients trust us#}
+{#        with their personal data, and we are committed to ensuring that their data is protected.#}
+{##}
+{#        We collect personal data such as patients' names, addresses, contact information, medical history, and treatment#}
+{#        plans. We only collect data that is necessary for the provision of medical services and for legitimate purposes#}
+{#        such as billing and record-keeping.#}
+{##}
+{#        We use technical and organizational measures to protect personal data from unauthorized access, alteration,#}
+{#        disclosure, and destruction. We regularly review our security measures to ensure that they are effective and#}
+{#        up-to-date.#}
+{##}
+{#        We provide access controls to ensure that only authorized personnel have access to personal data. We use strong#}
+{#        passwords, user accounts, and role-based access controls to limit access to personal data based on job#}
+{#        responsibilities.#}
+{##}
+{#        We maintain accurate and up-to-date personal data and ensure that patients have the right to access, correct,#}
+{#        and delete their data. We provide transparent information about our data processing activities and obtain clear#}
+{#        and specific consent from patients to process their personal data.#}
+{##}
+{#        In the event of a data breach, we will notify the supervisory authority within 72 hours and take appropriate#}
+{#        measures to mitigate the impact of the breach on patients.#}
+{#        We are committed to complying with all applicable data protection laws, regulations, and industry standards, and#}
+{#        we will regularly review and update our GDPR compliance policy to ensure that it remains effective and relevant.#}
     </p>
 
     <div style="text-align:center; margin-bottom: 30px">
-        <a href="{{ url_for('clinic.accept_rgpd') }}">
-            <button style="background-color: #0077b5; color: white; border-radius: 5px; padding: 10px 20px; font-size: 16px;">
+        <a href="{{ url_for('clinic.accept_gdpr') }}">
+            <button >
                 Accept GDPR
             </button>
         </a>
     </div>
 
-
-    <img src="../static/img/logo_2.png" alt="Sicko Clinic">
 </main>
+<script>
+    // Load the privacy policy text from the PRIVACY_POLICY file
+    fetch("../static/PRIVACY_POLICY.txt")
+        .then(response => response.text())
+        .then(data => {
+            document.getElementById("privacyPolicyText").innerText = data;
+        });
+</script>
 </body>
 </html>

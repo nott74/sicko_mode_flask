@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import render_template, redirect, url_for, Blueprint, request
+from flask import render_template, redirect, url_for, Blueprint, request, g
 
 from sicko_mode.database import get_connection
 from sicko_mode.models import Patient, Doctor
@@ -12,26 +12,37 @@ def patient_list():
     connection = get_connection()
     cursor = connection.cursor()
 
-    query = ("SELECT "
-             + "  patients.id as id, "
-             + "  patients.first_name as first_name, "
-             + "  patients.last_name as last_name, "
-             + "  patients.care_taker as care_taker, "
-             + "  patients.doctor_id as doctor_id, "
-             + "  patients.birth_date as birth_date, "
-             + "  CONCAT(users.first_name, ' ' , users.last_name) as doctor_name,"
-             + "  patients.address as address, "
-             + "  patients.phone_number as phone_number, "
-             + "  patients.email as email, "
-             + "  patients.gender as gender, "
-             + "  patients.emergency_contact_name as emergency_contact_name, "
-             + "  patients.emergency_contact_number as emergency_contact_number "
-             + "  FROM patients "
-             + "  INNER JOIN users on users.user_id = patients.doctor_id "
-             + "  WHERE  patients.rmv = 0 "
-             + "  ORDER BY patients.id DESC; ")
+    if g.user.user_type == 2:
+        aux_where = " AND appointments.doctor_id = %s"
+        values = (g.user.user_id,)
+    elif g.user.user_type == 3:
+        aux_where = " AND patients.care_taker = %s"
+        values = (g.user.user_id,)
+    else:
+        aux_where = ""
+        values = ()
 
-    cursor.execute(query)
+    query = ("SELECT "
+             "  patients.id as id, "
+             "  patients.first_name as first_name, "
+             "  patients.last_name as last_name, "
+             "  patients.care_taker as care_taker, "
+             "  patients.doctor_id as doctor_id, "
+             "  patients.birth_date as birth_date, "
+             "  CONCAT(users.first_name, ' ' , users.last_name) as doctor_name,"
+             "  patients.address as address, "
+             "  patients.phone_number as phone_number, "
+             "  patients.email as email, "
+             "  patients.gender as gender, "
+             "  patients.emergency_contact_name as emergency_contact_name, "
+             "  patients.emergency_contact_number as emergency_contact_number "
+             "  FROM patients "
+             "  INNER JOIN users on users.user_id = patients.doctor_id "
+             "  WHERE patients.rmv = 0 "
+             f"{aux_where}"
+             "  ORDER BY patients.id DESC; ")
+
+    cursor.execute(query, values)
 
     patient_list = []
 
@@ -40,16 +51,16 @@ def patient_list():
             Patient(id, first_name, last_name, care_taker, doctor_id, birth_date, doctor_name, address, phone_number,
                     email, gender, emergency_contact_name, emergency_contact_number))
 
-        # Query the doctor names for the select field
-        doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type=2 and rmv = '0'"
+    # Query the doctor names for the select field
+    doctors_query = "SELECT user_id, first_name, last_name FROM users WHERE user_type=2 and rmv = '0'"
 
-        cursor.execute(doctors_query)
-        doctors = []
+    cursor.execute(doctors_query)
+    doctors = []
 
-        for row in cursor.fetchall():
-            doctor_id, first_name, last_name = row
-            doctor = Doctor(doctor_id, first_name, last_name, "")
-            doctors.append(doctor)
+    for row in cursor.fetchall():
+        doctor_id, first_name, last_name = row
+        doctor = Doctor(doctor_id, first_name, last_name, "")
+        doctors.append(doctor)
 
     cursor.close()
     connection.close()

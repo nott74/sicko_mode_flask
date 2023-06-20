@@ -1,5 +1,5 @@
 import mysql.connector
-from flask import render_template, redirect, url_for, Blueprint, request
+from flask import render_template, redirect, url_for, Blueprint, request, g
 
 from sicko_mode.database import get_connection
 from sicko_mode.models import Patient, Doctor, Medication, Prescription
@@ -11,6 +11,16 @@ bp = Blueprint("prescriptions", __name__, url_prefix="/clinic/prescriptions")
 def prescription_list():
     connection = get_connection()
     cursor = connection.cursor()
+
+    if g.user.user_type == 2:
+        aux_where = " AND appointments.doctor_id = %s"
+        values = (g.user.user_id,)
+    elif g.user.user_type == 3:
+        aux_where = " AND patients.care_taker = %s"
+        values = (g.user.user_id,)
+    else:
+        aux_where = ""
+        values = ()
 
     query = ("SELECT "
              " prescriptions.id as prescription_id, "
@@ -30,9 +40,11 @@ def prescription_list():
              " users.user_id = appointments.doctor_id "
              " INNER JOIN medication on "
              " medication.id = prescriptions.medication "
-             " WHERE prescriptions.rmv = 0; ")
+             " WHERE prescriptions.rmv = 0 "
+             f"{aux_where}"
+             " ORDER BY prescriptions.id DESC; ")
 
-    cursor.execute(query)
+    cursor.execute(query, values)
 
     prescriptions_list = []
 
@@ -100,7 +112,7 @@ def add_prescription():
     instructions = request.form['instructions']
     prescription_date = request.form['prescription_date']
 
-    sql = "INSERT INTO prescriptions (patient_id, prescribing_doctor_id, medication, dosage, instructions, prescription_date) " \
+    sql = "INSERT INTO prescriptions (patient_id, doctor_id, medication, dosage, instructions, prescription_date) " \
           "VALUES (%s, %s, %s, %s, %s, %s)"
     val = (patient_id, doctor_id, medication_id, dosage, instructions, prescription_date)
 
@@ -114,7 +126,34 @@ def add_prescription():
     cursor.close()
     connection.close()
 
-    return redirect(url_for('clinic.prescriptions'))
+    return redirect(url_for('prescriptions.prescription_list'))
+
+
+@bp.route('/add_prescription_from_appt/<int:appointment_id>/<int:doctor_id>/<int:patient_id>', methods=['POST'])
+def add_prescription_from_appt(appointment_id, doctor_id, patient_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    medication_id = request.form['medication']
+    dosage = request.form['dosage']
+    instructions = request.form['instructions']
+    prescription_date = request.form['prescription_date']
+
+    sql = "INSERT INTO prescriptions (appointment_id, doctor_id, patient_id, medication, dosage, instructions, prescription_date) " \
+          "VALUES (%s, %s, %s, %s, %s, %s, %s)"
+    val = (appointment_id, doctor_id, patient_id, medication_id, dosage, instructions, prescription_date)
+
+    try:
+        cursor.execute(sql, val)
+        connection.commit()
+    except mysql.connector.Error as err:
+        print("Something went wrong: {}".format(err))
+        return "Error: Failed to add prescription"
+
+    cursor.close()
+    connection.close()
+
+    return redirect(url_for('appointments.appointment_details', appointment_id=appointment_id))
 
 
 @bp.route('/delete/<int:prescription_id>', methods=['POST'])
@@ -131,7 +170,24 @@ def delete_prescription(prescription_id):
     connection.close()
 
     # Redirect to the prescriptions page or any other desired page
-    return redirect(url_for('clinic.prescriptions'))
+    return redirect(url_for('prescriptions.prescription_list'))
+
+
+@bp.route('/delete/<int:appointment_id>/<int:prescription_id>', methods=['POST'])
+def delete_prescription_from_appt(appointment_id, prescription_id):
+    connection = get_connection()
+    cursor = connection.cursor()
+
+    # Update the 'rmv' column to 1 for the given prescription_id
+    query = "UPDATE prescriptions SET rmv = 1 WHERE id = %s"
+    cursor.execute(query, (prescription_id,))
+    connection.commit()
+
+    cursor.close()
+    connection.close()
+
+    # Redirect to the prescriptions page or any other desired page
+    return redirect(url_for('appointments.appointment_details', appointment_id=appointment_id))
 
 
 @bp.route('/details/<int:prescription_id>')
@@ -178,8 +234,8 @@ def prescription_details(prescription_id):
             prescription_data[6]
         )
 
-        # rendered_prescriptions = render_template('prescription_details.html', prescription=prescription)
-        return render_template('prescriptions/prescription_details.html', prescription=prescription)
+        rendered_prescriptions = render_template('prescriptions/prescription_details.html', prescription=prescription)
+        return render_template('home.html', content=rendered_prescriptions)
     else:
         # Prescription not found, handle accordingly (e.g., redirect or display an error message)
         return "Prescription not found"

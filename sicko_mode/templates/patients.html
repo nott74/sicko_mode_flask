@@ -3,112 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <title>Sicko Clinic</title>
-    <link rel="stylesheet" type="text/css" href="../static/style.css">
-    <style>
-        .form-group {
-            margin-bottom: 10px;
-        }
-
-        .form-group label {
-            display: inline-block;
-            width: 120px;
-            font-weight: bold;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            width: 300px;
-            padding: 6px;
-            font-size: 16px;
-        }
-
-        .form-group button {
-            padding: 6px 12px;
-            font-size: 16px;
-        }
-
-        /* Popup styles */
-        .overlay {
-            display: none;
-            position: fixed;
-            z-index: 999;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-        }
-
-        .popup {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            width: 80%;
-            max-width: 600px;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: #fff;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        .popup-close {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-
-        /* Button styles */
-
-
-        .delete-button,
-        .details-button {
-            padding: 6px 12px;
-            font-size: 14px;
-            background-color: #0077b5;
-            color: #fff;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .delete-button:hover,
-        .details-button:hover {
-            background-color: #005b8a;
-        }
-
-        /* Popup form styles */
-        .popup-form {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .popup-form .form-group label {
-            width: auto;
-            margin-right: 10px;
-        }
-
-        .popup-form .form-group input,
-        .popup-form .form-group textarea,
-        .popup-form .form-group select {
-            width: 300px;
-            padding: 6px;
-            font-size: 16px;
-        }
-    </style>
 </head>
 <body>
 <div class="grid-1-1 grid-flex margin-bottom-20">
-    <h2 class="grid-flex-grow">Patients List</h2>
+    <h2 class="grid-flex-grow margin-auto">Patients List</h2>
     <div >
         <button id="openPopupButton">Add Patient</button>
     </div>
 </div>
+
 <table>
     <thead>
     <tr>

@@ -6,25 +6,25 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>Login - Sicko</title>
 </head>
-<body class="auth-body">
+<body class="auth-body overflow-y-hidden">
 <form class="auth-form style" action="{{ url_for('auth.register') }}" method="post">
     <h1>Register</h1>
     <div class="overflow-y-auto overflow-x-hidden">
         <div style="margin-right: 10px">
             <label for="username">Username</label>
-            <input type="text" name="username" id="username" required>
+            <input class="margin-bottom-20" type="text" name="username" id="username" required>
             <label for="password">Password</label>
-            <input type="password" name="password" id="password" required>
+            <input class="margin-bottom-20" type="password" name="password" id="password" required>
             <label for="first_name">First Name:</label>
-            <input type="text" id="first_name" name="first_name" required>
+            <input class="margin-bottom-20" type="text" id="first_name" name="first_name" required>
             <label for="last_name">Last Name:</label>
-            <input type="text" id="last_name" name="last_name" required>
+            <input class="margin-bottom-20" type="text" id="last_name" name="last_name" required>
             <label for="birth_date">Birth Date:</label>
-            <input type="date" id="birth_date" name="birth_date" required>
+            <input class="margin-bottom-20" type="date" id="birth_date" name="birth_date" required>
             <label for="tlm">Phone Number:</label>
-            <input type="number" id="tlm" name="tlm" required>
+            <input class="margin-bottom-20" type="number" id="tlm" name="tlm" required>
             <label for="nif">NIF:</label>
-            <input type="number" id="nif" name="nif" required>
+            <input class="margin-bottom-20" type="number" id="nif" name="nif" required>
         </div>
     </div>
     <br>

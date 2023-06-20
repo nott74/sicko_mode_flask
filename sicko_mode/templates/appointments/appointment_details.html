@@ -3,114 +3,207 @@
 <head>
     <meta charset="UTF-8">
     <title>Appointment Details</title>
-    <link rel="stylesheet" type="text/css" href="../../static/style.css">
     <style>
-        .appointment-details {
-            margin: 20px auto;
-            width: 80%;
-            max-width: 1000px;
-        }
-
-        .appointment-details h2 {
-            margin-bottom: 10px;
-        }
-
-        .appointment-details table {
-            margin-top: 20px;
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .appointment-details th,
-        .appointment-details td {
-            padding: 8px;
-            border: 1px solid #ddd;
-        }
-
-        .appointment-details th {
-            background-color: #0077b5;
-            color: #fff;
-            text-align: center;
-            font-weight: bold;
-        }
-
-        .appointment-details td {
-            text-align: left;
-        }
-
         .image-container {
             margin-top: 20px;
-            text-align: center;
         }
 
         .image-container img {
-            max-width: 400px;
-            max-height: 400px;
+            max-width: 394px;
+            max-height: 394px;
         }
     </style>
 </head>
 <body>
-    <div class="appointment-details">
-        <h2>Appointment Details</h2>
-        <form action="{{ url_for('appointments.add_appointment') }}" method="POST">
-            <table>
-                <tr>
-                    <th>Appointment ID</th>
-                    <td>{{ appointment.appointment_id }}</td>
-                </tr>
-                <tr>
-                    <th>Patient Name</th>
-                    <td>{{ appointment.patient_name }}</td>
-                </tr>
-                <tr>
-                    <th>Doctor Name</th>
-                    <td>{{ appointment.doctor_name }}</td>
-                </tr>
-                <tr>
-                    <th>Appointment Date</th>
-                    {% if appointment.state == 'Scheduled' or appointment.state == 'Rescheduled' %}
-                        <td><input type="datetime-local" name="appointment_date" min="{{ current_datetime }}"
-                                   value="{{ appointment.appointment_date.strftime('%Y-%m-%dT%H:%M') if appointment.appointment_date else '' }}">
-                        </td>
+<div class="grid-1-1 grid-flex gap-100">
+    <div class="grid-2-3">
+        <h3>Personal Information</h3>
+        <form class="style padding-20"
+              action="{{ url_for('appointments.update_appointment', appointment_id=appointment.appointment_id, original_date=appointment.appointment_date) }}"
+              method="POST">
+            <div class="grid-1-1 grid-flex gap-20 margin-bottom-20">
+                <div class="grid-1-2">
+                    <label for="appointment_id">Appointment ID</label>
+                    <input type="text" id="appointment_id" name="appointment_id"
+                           value="{{ appointment.appointment_id }}" readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="observations">Observations</label>
+                    <input type="text" id="observations" name="observations" value="{{ appointment.observations }}"
+                           readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="rcd_user">Record User</label>
+                    <input type="text" id="rcd_user" name="rcd_user" value="{{ appointment.rcd_user }}" readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="rcd_date">Recorded Date</label>
+                    <input type="text" id="rcd_date" name="rcd_date" value="{{ appointment.rcd_date }}" readonly
+                           disabled><br><br>
+                </div>
+            </div>
+            <div class="grid-1-1 grid-flex gap-20 margin-bottom-20">
+                <div class="grid-1-2">
+                    <label for="doctor_name">Doctor Name</label>
+                    <input type="text" id="doctor_name" name="doctor_name"
+                           value="{{ appointment.doctor_name }}" readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="patient_name">Patient Name</label>
+                    <input type="text" id="patient_name" name="patient_name" value="{{ appointment.patient_name }}"
+                           readonly
+                           disabled><br><br>
+                </div>
+                <div class="grid-1-2">
+                    <label for="appointment_date">Appointment Date</label>
+                    {% if appointment.state_id == 1 or appointment.state_id == 5 %}
+                        <input type="datetime-local" id="appointment_date" name="appointment_date"
+                               min="{{ current_datetime }}"
+                               value="{{ appointment.appointment_date.strftime('%Y-%m-%dT%H:%M') if appointment.appointment_date else '' }}">
                     {% else %}
-                        <td>{{ appointment.appointment_date }}</td>
+                        <input type="datetime-local" id="appointment_date" name="appointment_date"
+                               value="{{ appointment.appointment_date.strftime('%Y-%m-%dT%H:%M') if appointment.appointment_date else '' }}"
+                               readonly
+                               disabled>
                     {% endif %}
-                </tr>
-                <tr>
-                    <th>State</th>
-                    <td>
-                        {% if appointment.state == 'Scheduled' or appointment.state == 'Rescheduled' %}
-                            <select name="appointment_state">
-                                <option value="{{ appointment.state }}">{{ appointment.state }}</option>
-                                <option value="2">Confirmed</option>
-                                <option value="4">Cancelled</option>
-                                <option value="6">No Show</option>
-                            </select>
-                        {% else %}
-                            {{ appointment.state }}
-                        {% endif %}
-                    </td>
-                </tr>
-                <tr>
-                    <th>Observations</th>
-                    <td>{{ appointment.observations }}</td>
-                </tr>
-                <tr>
-                    <th>Record User</th>
-                    <td>{{ appointment.rcd_user }}</td>
-                </tr>
-                <tr>
-                    <th>Recorded Date</th>
-                    <td>{{ appointment.rcd_date }}</td>
-                </tr>
-                {% if appointment.image_file %}
-                    <div class="image-container">
-                        <img src="{{ url_for('static', filename=appointment.image_file) }}" alt="Appointment Image">
-                    </div>
-                {% endif %}
-            </table>
-            <button type="submit" class="save-button">Save</button>
+                </div>
+                <div class="grid-1-2">
+                    <label for="appointment_state">State</label>
+                    {% if appointment.state_id == 1 or appointment.state_id == 5 %}
+                        <select id="appointment_state" name="appointment_state">
+                            <option value="{{ appointment.state_id }}">{{ appointment.state_name }}</option>
+                            <option value="2">Confirmed</option>
+                            <option value="4">Cancelled</option>
+                            <option value="6">No Show</option>
+                        </select>
+                    {% else %}
+                        <input type="text" id="state_name" name="state_name" value="{{ appointment.state_name }}"
+                               readonly
+                               disabled><br><br>
+                    {% endif %}
+                </div>
+            </div>
+            <br>
+            {% if appointment.state_id == 1 or appointment.state_id == 5 %}
+                <input type="submit" value="Update">
+            {% endif %}
         </form>
     </div>
+    {% if appointment.image_file %}
+        <div class="grid-1-3">
+            <h3>Appointment Image</h3>
+            <div class="image-container">
+                <img src="{{ url_for('static', filename=appointment.image_file) }}" alt="Appointment Image">
+            </div>
+        </div>
+    {% endif %}
+</div>
+<br><br>
+<div class="grid-1-1 grid-flex margin-bottom-20">
+    <h3 class="grid-flex-grow margin-auto">Prescription List</h3>
+    <div>
+        <button id="openPopupButton">Add Prescription</button>
+    </div>
+</div>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Patient</th>
+        <th>Doctor</th>
+        <th>Medication</th>
+        <th>Dosage</th>
+        <th>Instructions</th>
+        <th>Date</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    {% if prescriptions %}
+
+        {% for prescription in prescriptions %}
+            <tr>
+                <td>PRC{{ prescription.prescription_id }}</td>
+                <td>{{ prescription.patient_name }}</td>
+                <td>{{ prescription.doctor_name }}</td>
+                <td>{{ prescription.medication }}</td>
+                <td>{{ prescription.dosage }}</td>
+                <td>{{ prescription.instructions }}</td>
+                <td>{{ prescription.prescription_date }}</td>
+                <td>
+                    <div class="grid-flex gap-20">
+                        <!-- Delete Button -->
+                        <form method="POST"
+                              action="{{ url_for('prescriptions.delete_prescription_from_appt', prescription_id=prescription.prescription_id, appointment_id=appointment.appointment_id) }}">
+                            <button type="submit" class="delete-button">Delete</button>
+                        </form>
+                        <!-- Details Button -->
+                        <form method="GET"
+                              action="{{ url_for('prescriptions.prescription_details', prescription_id=prescription.prescription_id) }}">
+                            <button type="submit" class="details-button">Details</button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+        {% endfor %}
+    {% else %}
+        <tr>
+            <td colspan="8">No prescriptions associated to appointment</td>
+        </tr>
+    {% endif %}
+    </tbody>
+</table>
+
+
+<!-- Popup Form -->
+<div id="popupOverlay" class="overlay">
+    <div id="popup" class="popup">
+        <span id="closePopup" class="popup-close">&times;</span>
+        <h2>Add Prescription</h2>
+        <form method="POST"
+              action="{{ url_for('prescriptions.add_prescription_from_appt', appointment_id=appointment.appointment_id, doctor_id=doctor_id, patient_id=patient_id) }}"
+              class="popup-form">
+            <div class="form-group">
+                <label for="medication">Medication:</label>
+                <select id="medication" name="medication" required class="select-field">
+                    {% for medication in medications %}
+                        <option value="{{ medication.id }}">{{ medication.name }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="dosage">Dosage:</label>
+                <input type="text" id="dosage" name="dosage" required class="input-field">
+            </div>
+            <div class="form-group">
+                <label for="instructions">Instructions:</label>
+                <textarea id="instructions" name="instructions" required class="textarea-field"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="prescription_date">Date:</label>
+                <input type="date" id="prescription_date" name="prescription_date" required class="input-field">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn-submit">Add Prescription</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.getElementById("openPopupButton").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "block";
+        document.getElementById("popup").style.display = "block";
+    });
+
+    document.getElementById("closePopup").addEventListener("click", function () {
+        document.getElementById("popupOverlay").style.display = "none";
+        document.getElementById("popup").style.display = "none";
+    });
+</script>
 </body>
 </html>

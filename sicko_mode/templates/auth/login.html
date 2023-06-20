@@ -6,13 +6,13 @@
     <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
     <title>Login - Sicko</title>
 </head>
-<body class="auth-body">
+<body class="auth-body overflow-y-hidden">
     <form class="auth-form style" action="{{ url_for('auth.login') }}" method="post">
         <h1>Login</h1>
         <label for="username">Username</label>
-        <input type="text" name="username" id="username" required>
+        <input class="margin-bottom-20" type="text" name="username" id="username" required>
         <label for="password">Password</label>
-        <input type="password" name="password" id="password" required>
+        <input class="margin-bottom-20" type="password" name="password" id="password" required>
         <br>
         <div class="margin-bottom-auto">
             <input type="submit" value="Login">
